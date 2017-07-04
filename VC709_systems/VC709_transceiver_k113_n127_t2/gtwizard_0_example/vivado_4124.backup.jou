@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Tue Apr 25 10:50:40 2017
+# Process ID: 4124
+# Current directory: E:/master_thesis/Vivado/VC709_transceiver_k113_n127_t2/gtwizard_0_example
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent1876 E:\master_thesis\Vivado\VC709_transceiver_k113_n127_t2\gtwizard_0_example\gtwizard_0_example.xpr
+# Log file: E:/master_thesis/Vivado/VC709_transceiver_k113_n127_t2/gtwizard_0_example/vivado.log
+# Journal file: E:/master_thesis/Vivado/VC709_transceiver_k113_n127_t2/gtwizard_0_example\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project E:/master_thesis/Vivado/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.xpr
+update_compile_order -fileset sources_1
