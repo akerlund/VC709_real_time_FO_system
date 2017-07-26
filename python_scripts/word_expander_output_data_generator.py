@@ -4,12 +4,15 @@
 import sys, math
 
 
-INPUT_WIDTH  = 511
+INPUT_WIDTH  = 64
 #INPUT_WIDTH  = 512
 INPUT_ROM_ROWS  = 16
-OUTPUT_WIDTHS = [512]
+
+# For Expander simulations.
+OUTPUT_WIDTHS = [113,127,255,512,1023,247,502,1013,239,493,1003]
+
+# For Compressor simulations.
 #OUTPUT_WIDTHS = [127,255,511,120,247,502,113,239,493,106,231,484,99,223,475]
-#OUTPUT_WIDTHS = [127,255,511]
 
 for OUTPUT_WIDTH in OUTPUT_WIDTHS:
 
@@ -77,6 +80,7 @@ for OUTPUT_WIDTH in OUTPUT_WIDTHS:
                                     0xFFFFFFFFFFFFFFFF,
                                     0x0000000000000000]
 
+    # For Compressor, make one line only ones, next one only zeros, and so on...
     if INPUT_WIDTH == 127 or INPUT_WIDTH == 255 or INPUT_WIDTH == 511:
         DATA_GENERATOR_HEX = []
         for i in range(int(INPUT_ROM_ROWS/2)):

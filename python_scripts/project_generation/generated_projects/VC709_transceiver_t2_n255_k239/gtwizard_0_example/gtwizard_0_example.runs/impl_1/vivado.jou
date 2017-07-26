@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Thu Jun 22 20:03:01 2017
+# Process ID: 20438
+# Current directory: /home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.runs/impl_1
+# Command line: vivado -log gtwizard_0_exdes.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source gtwizard_0_exdes.tcl -notrace
+# Log file: /home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.runs/impl_1/gtwizard_0_exdes.vdi
+# Journal file: /home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.runs/impl_1/vivado.jou
+#-----------------------------------------------------------
+source gtwizard_0_exdes.tcl -notrace

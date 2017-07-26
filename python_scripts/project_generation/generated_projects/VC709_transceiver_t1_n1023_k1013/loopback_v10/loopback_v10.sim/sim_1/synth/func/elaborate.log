@@ -1,0 +1,42 @@
+Vivado Simulator 2017.1
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: /opt/Xilinx/Vivado2017/Vivado/2017.1/bin/unwrapped/lnx64.o/xelab -wto 572bd2c3515c4952bb3a75135f576d56 --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot transceiver_module_tb1_func_synth xil_defaultlib.transceiver_module_tb1 -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.reference_data_package
+Compiling package unisim.vcomponents
+Compiling package xil_defaultlib.bch_pak
+Compiling architecture arch_data_generator of entity xil_defaultlib.data_generator [\data_generator(data_width=64)\]
+Compiling architecture arch_word_expander_64in_to_113out of entity xil_defaultlib.word_expander_64IN_to_113OUT [word_expander_64in_to_113out_def...]
+Compiling architecture arch of entity xil_defaultlib.synenc [synenc_default]
+Compiling architecture arch of entity xil_defaultlib.synenc_reg [synenc_reg_default]
+Compiling architecture arch_word_compressor_127in_to_64out of entity xil_defaultlib.word_compressor_127IN_to_64OUT [word_compressor_127in_to_64out_d...]
+Compiling architecture arch_compressor_buffer of entity xil_defaultlib.compressor_buffer [\compressor_buffer(in_width=64)\]
+Compiling architecture rtl of entity xil_defaultlib.gtwizard_0_SCRAMBLER_alt [\gtwizard_0_SCRAMBLER_alt(tx_dat...]
+Compiling architecture arch_tx_syncronizer of entity xil_defaultlib.TX_syncronizer [tx_syncronizer_default]
+Compiling architecture arch_exdes_tx_logic of entity xil_defaultlib.exdes_TX_logic [exdes_tx_logic_default]
+Compiling architecture rtl of entity xil_defaultlib.gtwizard_0_BLOCK_SYNC_SM_alt [gtwizard_0_block_sync_sm_alt_def...]
+Compiling architecture arch_rx_syncronizer of entity xil_defaultlib.RX_syncronizer [rx_syncronizer_default]
+Compiling architecture rtl of entity xil_defaultlib.gtwizard_0_DESCRAMBLER_alt [\gtwizard_0_DESCRAMBLER_alt(rx_d...]
+Compiling architecture arch_word_expander_64in_to_127out of entity xil_defaultlib.word_expander_64IN_to_127OUT [word_expander_64in_to_127out_def...]
+Compiling architecture arch of entity xil_defaultlib.syncalc [syncalc_default]
+Compiling architecture arch of entity xil_defaultlib.gfmul [gfmul_default]
+Compiling architecture arch of entity xil_defaultlib.peterson [peterson_default]
+Compiling architecture arch of entity xil_defaultlib.chien [chien_default]
+Compiling architecture arch of entity xil_defaultlib.bch_peterson [bch_peterson_default]
+Compiling architecture arch_word_compressor_113in_to_64out of entity xil_defaultlib.word_compressor_113IN_to_64OUT [word_compressor_113in_to_64out_d...]
+Compiling architecture arch_ber_circuit of entity xil_defaultlib.BER_circuit_64_bit_input [ber_circuit_64_bit_input_default]
+Compiling architecture arch_ber_calculator of entity xil_defaultlib.BER_calculator [ber_calculator_default]
+Compiling architecture arch_fbert of entity xil_defaultlib.FBERT [\FBERT(in_width=64,start_word="0...]
+Compiling architecture arch_transceiver_module of entity xil_defaultlib.transceiver_module [transceiver_module_default]
+Compiling architecture arch_gthe2_sim of entity xil_defaultlib.GTHE2_SIM [\GTHE2_SIM(in_width=64)\]
+Compiling architecture arch_transceiver_module_tb1 of entity xil_defaultlib.transceiver_module_tb1
+Built simulation snapshot transceiver_module_tb1_func_synth

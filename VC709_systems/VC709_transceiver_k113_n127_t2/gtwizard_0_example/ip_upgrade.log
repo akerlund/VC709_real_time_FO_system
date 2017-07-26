@@ -1,0 +1,16 @@
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
+| Date         : Tue May  9 09:24:53 2017
+| Host         : freakuency-N550JK running 64-bit Ubuntu 14.04.5 LTS
+| Command      : upgrade_ip
+| Device       : xc7vx690tffg1761-2
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'gtwizard_0'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of gtwizard_0 (xilinx.com:ip:gtwizard:3.6) from (Rev. 3) to (Rev. 6)
+

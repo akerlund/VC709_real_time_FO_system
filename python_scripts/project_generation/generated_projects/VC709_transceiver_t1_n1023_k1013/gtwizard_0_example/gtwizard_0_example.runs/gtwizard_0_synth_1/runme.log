@@ -1,0 +1,66 @@
+
+*** Running vivado
+    with args -log gtwizard_0.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source gtwizard_0.tcl
+
+
+****** Vivado v2017.1 (64-bit)
+  **** SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+  **** IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source gtwizard_0.tcl -notrace
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1205.953 ; gain = 70.004 ; free physical = 4196 ; free virtual = 24814
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0.vhd:540]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_init' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_init.vhd:554]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_multi_gt' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_multi_gt.vhd:531]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_GT' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_gt.vhd:201]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_GT' (1#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_gt.vhd:201]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_multi_gt' (2#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_multi_gt.vhd:531]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_TX_STARTUP_FSM' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_tx_startup_fsm.vhd:120]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_sync_block' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_sync_block.vhd:97]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_sync_block' (3#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_sync_block.vhd:97]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_TX_STARTUP_FSM' (4#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_tx_startup_fsm.vhd:120]
+INFO: [Synth 8-638] synthesizing module 'gtwizard_0_RX_STARTUP_FSM' [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_rx_startup_fsm.vhd:134]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_RX_STARTUP_FSM' (5#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0/example_design/gtwizard_0_rx_startup_fsm.vhd:134]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0_init' (6#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0_init.vhd:554]
+INFO: [Synth 8-256] done synthesizing module 'gtwizard_0' (7#1) [/home/freakuency/Vivado/April/VC709_transceiver_k113_n127_t2/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/ip/gtwizard_0/gtwizard_0.vhd:540]
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1248.453 ; gain = 112.504 ; free physical = 4200 ; free virtual = 24818
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1248.453 ; gain = 112.504 ; free physical = 4202 ; free virtual = 24819
+INFO: [Device 21-403] Loading part xc7vx690tffg1761-2
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.06 . Memory (MB): peak = 1781.395 ; gain = 0.004 ; free physical = 3768 ; free virtual = 24386
+Finished Constraint Validation : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3912 ; free virtual = 24528
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3912 ; free virtual = 24528
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3914 ; free virtual = 24531
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:23 ; elapsed = 00:00:24 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3905 ; free virtual = 24522
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3882 ; free virtual = 24499
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:31 ; elapsed = 00:00:32 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3751 ; free virtual = 24368
+Finished Timing Optimization : Time (s): cpu = 00:00:31 ; elapsed = 00:00:33 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3750 ; free virtual = 24366
+Finished Technology Mapping : Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished IO Insertion : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+
+Report Cell Usage: 
++------+--------------+------+
+|      |Cell          |Count |
++------+--------------+------+
+|1     |BUFG          |     1|
+|2     |CARRY4        |    88|
+|3     |GTHE2_CHANNEL |     4|
+|4     |LUT1          |   308|
+|5     |LUT2          |   145|
+|6     |LUT3          |    96|
+|7     |LUT4          |   104|
+|8     |LUT5          |   156|
+|9     |LUT6          |   201|
+|10    |FD            |   360|
+|11    |FDCE          |    60|
+|12    |FDP           |     8|
+|13    |FDRE          |   569|
+|14    |FDSE          |    28|
++------+--------------+------+
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 1781.395 ; gain = 645.445 ; free physical = 3745 ; free virtual = 24361
+synth_design: Time (s): cpu = 00:00:34 ; elapsed = 00:00:35 . Memory (MB): peak = 1789.391 ; gain = 699.875 ; free physical = 3763 ; free virtual = 24379

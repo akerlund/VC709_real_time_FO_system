@@ -1,0 +1,288 @@
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version     : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
+| Date             : Thu Jun 22 20:26:05 2017
+| Host             : freakuency-N550JK running 64-bit Ubuntu 14.04.5 LTS
+| Command          : report_power -file gtwizard_0_exdes_power_routed.rpt -pb gtwizard_0_exdes_power_summary_routed.pb -rpx gtwizard_0_exdes_power_routed.rpx
+| Design           : gtwizard_0_exdes
+| Device           : xc7vx690tffg1761-2
+| Design State     : routed
+| Grade            : commercial
+| Process          : typical
+| Characterization : Production
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Power Report
+
+Table of Contents
+-----------------
+1. Summary
+1.1 On-Chip Components
+1.2 Power Supply Summary
+1.3 Confidence Level
+2. Settings
+2.1 Environment
+2.2 Clock Constraints
+3. Detailed Reports
+3.1 By Hierarchy
+
+1. Summary
+----------
+
++--------------------------+-------+
+| Total On-Chip Power (W)  | 2.081 |
+| Dynamic (W)              | 1.700 |
+| Device Static (W)        | 0.381 |
+| Effective TJA (C/W)      | 1.1   |
+| Max Ambient (C)          | 82.6  |
+| Junction Temperature (C) | 27.4  |
+| Confidence Level         | Low   |
+| Setting File             | ---   |
+| Simulation Activity File | ---   |
+| Design Nets Matched      | NA    |
++--------------------------+-------+
+
+
+1.1 On-Chip Components
+----------------------
+
++-------------------------+-----------+----------+-----------+-----------------+
+| On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
++-------------------------+-----------+----------+-----------+-----------------+
+| Clocks                  |     0.111 |       26 |       --- |             --- |
+| Slice Logic             |     0.041 |    50114 |       --- |             --- |
+|   LUT as Logic          |     0.038 |    29805 |    433200 |            6.88 |
+|   Register              |     0.001 |    10921 |    866400 |            1.26 |
+|   F7/F8 Muxes           |    <0.001 |     6863 |    433200 |            1.58 |
+|   CARRY4                |    <0.001 |      218 |    108300 |            0.20 |
+|   LUT as Shift Register |    <0.001 |        1 |    174200 |           <0.01 |
+|   Others                |     0.000 |      215 |       --- |             --- |
+| Signals                 |     0.058 |    32864 |       --- |             --- |
+| MMCM                    |     0.182 |        2 |        20 |           10.00 |
+| I/O                     |     0.010 |       31 |       850 |            3.65 |
+| GTH                     |     1.298 |        4 |       --- |             --- |
+| Static Power            |     0.381 |          |           |                 |
+| Total                   |     2.081 |          |           |                 |
++-------------------------+-----------+----------+-----------+-----------------+
+
+
+1.2 Power Supply Summary
+------------------------
+
++-----------+-------------+-----------+-------------+------------+
+| Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
++-----------+-------------+-----------+-------------+------------+
+| Vccint    |       1.000 |     0.605 |       0.400 |      0.205 |
+| Vccaux    |       1.800 |     0.155 |       0.101 |      0.053 |
+| Vcco33    |       3.300 |     0.000 |       0.000 |      0.000 |
+| Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
+| Vcco18    |       1.800 |     0.004 |       0.003 |      0.001 |
+| Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |
+| Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |
+| Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |
+| Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccbram   |       1.000 |     0.005 |       0.000 |      0.005 |
+| MGTAVcc   |       1.000 |     0.816 |       0.788 |      0.028 |
+| MGTAVtt   |       1.200 |     0.263 |       0.256 |      0.008 |
+| MGTVccaux |       1.800 |     0.010 |       0.010 |      0.000 |
+| MGTZVccl  |       1.075 |     0.000 |       0.000 |      0.000 |
+| MGTZAVcc  |       1.075 |     0.000 |       0.000 |      0.000 |
+| MGTZVcch  |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccadc    |       1.800 |     0.020 |       0.000 |      0.020 |
++-----------+-------------+-----------+-------------+------------+
+
+
+1.3 Confidence Level
+--------------------
+
++-----------------------------+------------+--------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| User Input Data             | Confidence | Details                                                | Action                                                                                                     |
++-----------------------------+------------+--------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| Design implementation state | High       | Design is routed                                       |                                                                                                            |
+| Clock nodes activity        | High       | User specified more than 95% of clocks                 |                                                                                                            |
+| I/O nodes activity          | Low        | More than 75% of inputs are missing user specification | Provide missing input activity with simulation results or by editing the "By Resource Type -> I/Os" view   |
+| Internal nodes activity     | Medium     | User specified less than 25% of internal nodes         | Provide missing internal nodes activity with simulation results or by editing the "By Resource Type" views |
+| Device models               | High       | Device models are Production                           |                                                                                                            |
+|                             |            |                                                        |                                                                                                            |
+| Overall confidence level    | Low        |                                                        |                                                                                                            |
++-----------------------------+------------+--------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+
+
+2. Settings
+-----------
+
+2.1 Environment
+---------------
+
++-----------------------+--------------------------+
+| Ambient Temp (C)      | 25.0                     |
+| ThetaJA (C/W)         | 1.1                      |
+| Airflow (LFM)         | 250                      |
+| Heat Sink             | medium (Medium Profile)  |
+| ThetaSA (C/W)         | 2.2                      |
+| Board Selection       | medium (10"x10")         |
+| # of Board Layers     | 12to15 (12 to 15 Layers) |
+| Board Temperature (C) | 25.0                     |
++-----------------------+--------------------------+
+
+
+2.2 Clock Constraints
+---------------------
+
++------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------------+
+| Clock                                                                                    | Domain                                                                                   | Constraint (ns) |
++------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------------+
+| Q3_CLK1_GTREFCLK_PAD_P_IN                                                                | Q3_CLK1_GTREFCLK_PAD_P_IN                                                                |             6.4 |
+| clkfbout                                                                                 | gtwizard_0_support_i/gt_usrclk_source/rxoutclk_mmcm1_i/clkfbout                          |             3.1 |
+| clkfbout_1                                                                               | gtwizard_0_support_i/gt_usrclk_source/txoutclk_mmcm0_i/clkfbout                          |             3.1 |
+| clkout0                                                                                  | gtwizard_0_support_i/gt_usrclk_source/rxoutclk_mmcm1_i/clkout0                           |             6.2 |
+| clkout0_1                                                                                | gtwizard_0_support_i/gt_usrclk_source/txoutclk_mmcm0_i/clkout0                           |             6.2 |
+| clkout1                                                                                  | gtwizard_0_support_i/gt_usrclk_source/rxoutclk_mmcm1_i/clkout1                           |             3.1 |
+| clkout1_1                                                                                | gtwizard_0_support_i/gt_usrclk_source/txoutclk_mmcm0_i/clkout1                           |             3.1 |
+| drpclk_in_i                                                                              | DRP_CLK_IN_P                                                                             |            10.0 |
+| gtwizard_0_support_i/gtwizard_0_init_i/U0/gtwizard_0_i/gt0_gtwizard_0_i/gthe2_i/RXOUTCLK | gtwizard_0_support_i/gtwizard_0_init_i/U0/gtwizard_0_i/gt0_gtwizard_0_i/gt0_rxoutclk_out |             3.1 |
+| gtwizard_0_support_i/gtwizard_0_init_i/U0/gtwizard_0_i/gt0_gtwizard_0_i/gthe2_i/TXOUTCLK | gtwizard_0_support_i/gtwizard_0_init_i/U0/gtwizard_0_i/gt0_gtwizard_0_i/gt0_txoutclk_out |             3.1 |
++------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------------+
+
+
+3. Detailed Reports
+-------------------
+
+3.1 By Hierarchy
+----------------
+
++----------------------------------------+-----------+
+| Name                                   | Power (W) |
++----------------------------------------+-----------+
+| gtwizard_0_exdes                       |     1.700 |
+|   I2C_comp                             |     0.002 |
+|     I2C_comp                           |    <0.001 |
+|   IIC_SCL_MAIN_LS_IOBUF_inst           |     0.000 |
+|   IIC_SDA_MAIN_LS_IOBUF_inst           |    <0.001 |
+|   UART_comp                            |    <0.001 |
+|   block_sync_sm_2_i                    |     0.001 |
+|   block_sync_sm_3_i                    |     0.001 |
+|   descrambler_2_i                      |     0.002 |
+|   descrambler_3_i                      |     0.002 |
+|   gt2_frame_check                      |     0.003 |
+|   gt2_frame_gen                        |    <0.001 |
+|   gt3_frame_check                      |     0.003 |
+|   gt3_frame_gen                        |    <0.001 |
+|   gtwizard_0_support_i                 |     1.522 |
+|     common0_i                          |    <0.001 |
+|     common_reset_i                     |    <0.001 |
+|     gt_usrclk_source                   |     0.186 |
+|       rxoutclk_mmcm1_i                 |     0.092 |
+|       txoutclk_mmcm0_i                 |     0.093 |
+|     gtwizard_0_init_i                  |     1.336 |
+|       U0                               |     1.336 |
+|         gt0_rxresetfsm_i               |     0.005 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_RXRESETDONE             |    <0.001 |
+|           sync_data_valid              |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_rx_fsm_reset_done_int   |    <0.001 |
+|           sync_rxpmaresetdone          |    <0.001 |
+|           sync_rxpmaresetdone_rx_s     |     0.002 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|         gt0_txresetfsm_i               |     0.003 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_TXRESETDONE             |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|           sync_tx_fsm_reset_done_int   |    <0.001 |
+|         gt1_rxresetfsm_i               |     0.005 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_RXRESETDONE             |    <0.001 |
+|           sync_data_valid              |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_rx_fsm_reset_done_int   |    <0.001 |
+|           sync_rxpmaresetdone          |    <0.001 |
+|           sync_rxpmaresetdone_rx_s     |     0.002 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|         gt1_txresetfsm_i               |     0.003 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_TXRESETDONE             |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|           sync_tx_fsm_reset_done_int   |    <0.001 |
+|         gt2_rxresetfsm_i               |     0.005 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_RXRESETDONE             |    <0.001 |
+|           sync_data_valid              |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_rx_fsm_reset_done_int   |    <0.001 |
+|           sync_rxpmaresetdone          |    <0.001 |
+|           sync_rxpmaresetdone_rx_s     |     0.002 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|         gt2_txresetfsm_i               |     0.003 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_TXRESETDONE             |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|           sync_tx_fsm_reset_done_int   |    <0.001 |
+|         gt3_rxresetfsm_i               |     0.005 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_RXRESETDONE             |    <0.001 |
+|           sync_data_valid              |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_rx_fsm_reset_done_int   |    <0.001 |
+|           sync_rxpmaresetdone          |    <0.001 |
+|           sync_rxpmaresetdone_rx_s     |     0.002 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|         gt3_txresetfsm_i               |     0.003 |
+|           sync_QPLLLOCK                |    <0.001 |
+|           sync_TXRESETDONE             |    <0.001 |
+|           sync_mmcm_lock_reclocked     |    <0.001 |
+|           sync_run_phase_alignment_int |    <0.001 |
+|           sync_time_out_wait_bypass    |    <0.001 |
+|           sync_tx_fsm_reset_done_int   |    <0.001 |
+|         gtwizard_0_i                   |     1.300 |
+|           gt0_gtwizard_0_i             |     0.326 |
+|           gt1_gtwizard_0_i             |     0.325 |
+|           gt2_gtwizard_0_i             |     0.325 |
+|           gt3_gtwizard_0_i             |     0.325 |
+|   scrambler_2_i                        |     0.002 |
+|   scrambler_3_i                        |     0.002 |
+|   tm0                                  |     0.085 |
+|     rx_BER_calculator                  |     0.005 |
+|       BER_circuit_64_bit_input_comp_0  |     0.004 |
+|     rx_FBERT                           |     0.002 |
+|     rx_RX_syncronizer                  |    <0.001 |
+|     rx_bch_peterson                    |     0.005 |
+|       chi                              |     0.000 |
+|         mulc_2_62                      |     0.000 |
+|         mulc_2_82                      |     0.000 |
+|       synd                             |     0.000 |
+|     rx_block_sync                      |    <0.001 |
+|     rx_descrambler                     |     0.002 |
+|     rx_word_compressor                 |     0.009 |
+|     rx_word_expander                   |     0.006 |
+|     tx_64b66b_logic                    |    <0.001 |
+|     tx_TX_syncronizer                  |     0.002 |
+|     tx_compressor_buffer               |     0.017 |
+|     tx_data_generator                  |     0.002 |
+|     tx_scrambler_comp                  |     0.001 |
+|     tx_synenc_reg                      |     0.010 |
+|     tx_word_compressor                 |     0.015 |
+|     tx_word_expander                   |     0.006 |
+|   tm1                                  |     0.058 |
+|     rx_block_sync                      |    <0.001 |
+|     tx_64b66b_logic                    |    <0.001 |
+|     tx_TX_syncronizer                  |     0.003 |
+|     tx_compressor_buffer               |     0.017 |
+|     tx_data_generator                  |     0.002 |
+|     tx_scrambler_comp                  |     0.001 |
+|     tx_synenc_reg                      |     0.011 |
+|     tx_word_compressor                 |     0.017 |
+|     tx_word_expander                   |     0.006 |
++----------------------------------------+-----------+
+
+

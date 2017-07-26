@@ -1,0 +1,1 @@
+-wto "572bd2c3515c4952bb3a75135f576d56" --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "transceiver_module_tb1_func_synth" "xil_defaultlib.transceiver_module_tb1" -log "elaborate.log" 

@@ -1,18 +1,21 @@
-*.log
-wp-config.php
-wp-content/advanced-cache.php
-wp-content/backup-db/
-wp-content/backups/
-wp-content/blogs.dir/
-wp-content/cache/
-wp-content/upgrade/
-wp-content/uploads/
-wp-content/wp-cache-config.php
-wp-content/plugins/hello.php
+MATLAB_19July2/
+FEC_files/*/*.vhd~
+VC709_systems/VC709_transceiver_k239_n255_t2/
+VC709_systems/compressor_new/
+VC709_systems/generated_projects/
+VC709_systems/loopback_files/
+VC709_systems/tb_for_new_compressors/
+VC709_systems/word_expander_tests/
+python_scripts/compressor_generator_v2.py
+python_scripts/compressor_tb_aid.py
+python_scripts/compressor_tb_generator_v2.py
+python_scripts/*.pyc
+python_scripts/compressor_v2_test.vhd
+python_scripts/expander_tb_aid.py
+python_scripts/new_compressors/
+python_scripts/project_generation/*.pyc
+python_scripts/project_generation/__pycache__/
+python_scripts/project_generation/generated projects/
 
-/.htaccess
-/license.txt
-/readme.html
-/sitemap.xml
-/sitemap.xml.gz
+
 
