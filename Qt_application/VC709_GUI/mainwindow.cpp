@@ -27,12 +27,18 @@ MainWindow::MainWindow(QWidget *parent) :
     SYSCLK      = 200000000;
     run_time    = ui->doubleSpinBox_run_time->value( ) * SYSCLK;
 
+    BER_avg_size = 60;
+    BER_avg_cnt = 0;
+
+
+
     connect(q_timer, SIGNAL(timeout()), this, SLOT(q_timer_event( )));
     connect(serial_port, SIGNAL(readyRead( )),
             this, SLOT(serial_RX_event( )));
     connect(serial_port, SIGNAL(error(QSerialPort::SerialPortError)),
             this, SLOT(serialPortError(QSerialPort::SerialPortError)));
 
+    // Allowing drag and zoom in the plots.
     ui->plot_BER->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->plot_RX_Power->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->plot_rx_valid->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
@@ -79,6 +85,9 @@ void MainWindow::init_plots( )
     ui->plot_BER->addGraph( );
     ui->plot_BER->graph(0)->setPen(QPen(Qt::darkBlue));
     ui->plot_BER->graph(0)->setName("BER");
+    ui->plot_BER->addGraph( );
+    ui->plot_BER->graph(1)->setPen(QPen(Qt::darkBlue));
+    ui->plot_BER->graph(1)->setName("BER_avg");
 
     ui->plot_BER->xAxis->setLabel("Time (s)");
     ui->plot_BER->yAxis->setLabel("BER");
@@ -88,6 +97,7 @@ void MainWindow::init_plots( )
     ui->plot_BER->legend->setFont(legendFont);
     ui->plot_BER->legend->setBrush(QBrush(QColor(255,255,255,230)));
     ui->plot_BER->axisRect( )->insetLayout( )->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
+    ui->plot_BER->yAxis->setRange(0, 10);
 
 
     // RX power plot.
@@ -180,14 +190,15 @@ void MainWindow::q_timer_event( )
 {
     sin_shifter += 0.01;
 
-    QVector<double> x_axis(300);
-    QVector<double> y_axis(300);
+    QVector<double> x_axis(max_vector_size);
+    QVector<double> y_axis(max_vector_size);
 
     for (int i = 0;i < x_axis.size();i++) {
         x_axis[i] = double(i);
     }
 
     ui->plot_BER->graph(0)->setData(x_axis, BER);
+    ui->plot_BER->graph(1)->setData(x_axis, BER_avg_line);
     ui->plot_RX_Power->graph(0)->setData(x_axis, SFP0_RX_PWR);
 
     ui->plot_rx_valid->graph(0)->setData(x_axis, RX_DATA_VALID);
@@ -196,7 +207,10 @@ void MainWindow::q_timer_event( )
     ui->plot_FBERT_state->graph(0)->setData(x_axis, FBERT_state);
 
 
+    //ui->plot_BER->yAxis->setRange(0, 10.0); // <====
     ui->plot_BER->replot( );
+
+
     ui->plot_RX_Power->replot( );
     ui->plot_rx_valid->replot( );
     ui->plot_rx_header_valid->replot( );
@@ -210,71 +224,71 @@ void MainWindow::q_timer_event( )
     ui->plot_RX_loss->rescaleAxes( );
     ui->plot_FBERT_state->rescaleAxes( );
 
-    ui->plot_SFP_00->graph(0)->setData(x_axis, SFP0_VCC);
-    ui->plot_SFP_00->replot( );
-    ui->plot_SFP_00->rescaleAxes();
-    ui->plot_SFP_01->graph(0)->setData(x_axis, SFP0_TX_CUR);
-    ui->plot_SFP_01->replot( );
-    ui->plot_SFP_01->rescaleAxes();
-    ui->plot_SFP_02->graph(0)->setData(x_axis, SFP0_TX_PWR);
-    ui->plot_SFP_02->replot( );
-    ui->plot_SFP_02->rescaleAxes();
-    ui->plot_SFP_03->graph(0)->setData(x_axis, SFP0_RX_PWR);
-    ui->plot_SFP_03->replot( );
-    ui->plot_SFP_03->rescaleAxes();
+//    ui->plot_SFP_00->graph(0)->setData(x_axis, SFP0_VCC);
+//    ui->plot_SFP_00->replot( );
+//    ui->plot_SFP_00->rescaleAxes();
+//    ui->plot_SFP_01->graph(0)->setData(x_axis, SFP0_TX_CUR);
+//    ui->plot_SFP_01->replot( );
+//    ui->plot_SFP_01->rescaleAxes();
+//    ui->plot_SFP_02->graph(0)->setData(x_axis, SFP0_TX_PWR);
+//    ui->plot_SFP_02->replot( );
+//    ui->plot_SFP_02->rescaleAxes();
+//    ui->plot_SFP_03->graph(0)->setData(x_axis, SFP0_RX_PWR);
+//    ui->plot_SFP_03->replot( );
+//    ui->plot_SFP_03->rescaleAxes();
 
-    ui->plot_SFP_10->graph(0)->setData(x_axis, SFP1_VCC);
-    ui->plot_SFP_10->replot( );
-    ui->plot_SFP_10->rescaleAxes();
-    ui->plot_SFP_11->graph(0)->setData(x_axis, SFP1_TX_CUR);
-    ui->plot_SFP_11->replot( );
-    ui->plot_SFP_11->rescaleAxes();
-    ui->plot_SFP_12->graph(0)->setData(x_axis, SFP1_TX_PWR);
-    ui->plot_SFP_12->replot( );
-    ui->plot_SFP_12->rescaleAxes();
-    ui->plot_SFP_13->graph(0)->setData(x_axis, SFP1_RX_PWR);
-    ui->plot_SFP_13->replot( );
-    ui->plot_SFP_13->rescaleAxes();
+//    ui->plot_SFP_10->graph(0)->setData(x_axis, SFP1_VCC);
+//    ui->plot_SFP_10->replot( );
+//    ui->plot_SFP_10->rescaleAxes();
+//    ui->plot_SFP_11->graph(0)->setData(x_axis, SFP1_TX_CUR);
+//    ui->plot_SFP_11->replot( );
+//    ui->plot_SFP_11->rescaleAxes();
+//    ui->plot_SFP_12->graph(0)->setData(x_axis, SFP1_TX_PWR);
+//    ui->plot_SFP_12->replot( );
+//    ui->plot_SFP_12->rescaleAxes();
+//    ui->plot_SFP_13->graph(0)->setData(x_axis, SFP1_RX_PWR);
+//    ui->plot_SFP_13->replot( );
+//    ui->plot_SFP_13->rescaleAxes();
 
-    ui->plot_SFP_20->graph(0)->setData(x_axis, SFP2_VCC);
-    ui->plot_SFP_20->replot( );
-    ui->plot_SFP_20->rescaleAxes();
-    ui->plot_SFP_21->graph(0)->setData(x_axis, SFP2_TX_CUR);
-    ui->plot_SFP_21->replot( );
-    ui->plot_SFP_21->rescaleAxes();
-    ui->plot_SFP_22->graph(0)->setData(x_axis, SFP2_TX_PWR);
-    ui->plot_SFP_22->replot( );
-    ui->plot_SFP_22->rescaleAxes();
-    ui->plot_SFP_23->graph(0)->setData(x_axis, SFP2_RX_PWR);
-    ui->plot_SFP_23->replot( );
-    ui->plot_SFP_23->rescaleAxes();
+//    ui->plot_SFP_20->graph(0)->setData(x_axis, SFP2_VCC);
+//    ui->plot_SFP_20->replot( );
+//    ui->plot_SFP_20->rescaleAxes();
+//    ui->plot_SFP_21->graph(0)->setData(x_axis, SFP2_TX_CUR);
+//    ui->plot_SFP_21->replot( );
+//    ui->plot_SFP_21->rescaleAxes();
+//    ui->plot_SFP_22->graph(0)->setData(x_axis, SFP2_TX_PWR);
+//    ui->plot_SFP_22->replot( );
+//    ui->plot_SFP_22->rescaleAxes();
+//    ui->plot_SFP_23->graph(0)->setData(x_axis, SFP2_RX_PWR);
+//    ui->plot_SFP_23->replot( );
+//    ui->plot_SFP_23->rescaleAxes();
 
-    ui->plot_SFP_30->graph(0)->setData(x_axis, SFP3_VCC);
-    ui->plot_SFP_30->replot( );
-    ui->plot_SFP_30->rescaleAxes();
-    ui->plot_SFP_31->graph(0)->setData(x_axis, SFP3_TX_CUR);
-    ui->plot_SFP_31->replot( );
-    ui->plot_SFP_31->rescaleAxes();
-    ui->plot_SFP_32->graph(0)->setData(x_axis, SFP3_TX_PWR);
-    ui->plot_SFP_32->replot( );
-    ui->plot_SFP_32->rescaleAxes();
-    ui->plot_SFP_33->graph(0)->setData(x_axis, SFP3_RX_PWR);
-    ui->plot_SFP_33->replot( );
-    ui->plot_SFP_33->rescaleAxes();
+//    ui->plot_SFP_30->graph(0)->setData(x_axis, SFP3_VCC);
+//    ui->plot_SFP_30->replot( );
+//    ui->plot_SFP_30->rescaleAxes();
+//    ui->plot_SFP_31->graph(0)->setData(x_axis, SFP3_TX_CUR);
+//    ui->plot_SFP_31->replot( );
+//    ui->plot_SFP_31->rescaleAxes();
+//    ui->plot_SFP_32->graph(0)->setData(x_axis, SFP3_TX_PWR);
+//    ui->plot_SFP_32->replot( );
+//    ui->plot_SFP_32->rescaleAxes();
+//    ui->plot_SFP_33->graph(0)->setData(x_axis, SFP3_RX_PWR);
+//    ui->plot_SFP_33->replot( );
+//    ui->plot_SFP_33->rescaleAxes();
 
-    // SFP Temperature plot.
-    ui->plot_TEMP_0->graph(0)->setData(x_axis, SFP0_TEMP);
-    ui->plot_TEMP_0->replot( );
-    ui->plot_TEMP_0->rescaleAxes();
-    ui->plot_TEMP_1->graph(0)->setData(x_axis, SFP1_TEMP);
-    ui->plot_TEMP_1->replot( );
-    ui->plot_TEMP_1->rescaleAxes();
-    ui->plot_TEMP_2->graph(0)->setData(x_axis, SFP2_TEMP);
-    ui->plot_TEMP_2->replot( );
-    ui->plot_TEMP_2->rescaleAxes();
-    ui->plot_TEMP_3->graph(0)->setData(x_axis, SFP3_TEMP);
-    ui->plot_TEMP_3->replot( );
-    ui->plot_TEMP_3->rescaleAxes();
+//    // SFP Temperature plot.
+//    ui->plot_TEMP_0->graph(0)->setData(x_axis, SFP0_TEMP);
+//    ui->plot_TEMP_0->replot( );
+//    ui->plot_TEMP_0->rescaleAxes();
+//    ui->plot_TEMP_1->graph(0)->setData(x_axis, SFP1_TEMP);
+//    ui->plot_TEMP_1->replot( );
+//    ui->plot_TEMP_1->rescaleAxes();
+//    ui->plot_TEMP_2->graph(0)->setData(x_axis, SFP2_TEMP);
+//    ui->plot_TEMP_2->replot( );
+//    ui->plot_TEMP_2->rescaleAxes();
+//    ui->plot_TEMP_3->graph(0)->setData(x_axis, SFP3_TEMP);
+//    ui->plot_TEMP_3->replot( );
+//    ui->plot_TEMP_3->rescaleAxes();
 
     if (!FBERT_state.isEmpty()){
         switch((int)FBERT_state.last( )){
@@ -450,29 +464,90 @@ void MainWindow::process_RX_package(char unsigned *rx_data, int received_bytes) 
         // BER and STATUS
         case 0xA7:
         {
-//            print_to_terminal("BER header: A7.");
-//            if (received_bytes <= 5) {
-//                print_to_terminal("Not enough bytes received. " + QString::number(received_bytes));
 
-//            } else {
-                double tm_BER = (rx_data[3] << 24) + (rx_data[2] << 16) + (rx_data[1] << 8) + rx_data[0];
-//                print_to_terminal("BER: " + QString::number(tm_BER));
-                tm_BER = tm_BER / (65535.0/156250000.0*10000000000.0);
-                shift_in_to_vector(&BER, tm_BER,  max_vector_size);
+            double tm_BER = (rx_data[3] << 24) + (rx_data[2] << 16) + (rx_data[1] << 8) + rx_data[0];
 
 
 
-                double tm_RX_LOSS       = rx_data[4] & 0x01;
-                double tm_HEADER        = ((rx_data[4] & 0x06) >> 1);
-                double tm_RX_DATA_VALID = ((rx_data[4] & 0x08) >> 3);
-                double tm_FBERT_STATE   = ((rx_data[4] & 0x70) >> 4);
+            // Normal appending.
+            //tm_BER = tm_BER / (65535.0/156250000.0*10000000000.0);
+            //tm_BER = tm_BER / (65535.0*64.0);
+            //shift_in_to_vector(&BER, tm_BER, max_vector_size);
 
-                shift_in_to_vector(&RX_LOSS,       tm_RX_LOSS,       max_vector_size);
-                shift_in_to_vector(&HEADER_VALID,  tm_HEADER,        max_vector_size);
-                shift_in_to_vector(&RX_DATA_VALID, tm_RX_DATA_VALID, max_vector_size);
-                shift_in_to_vector(&FBERT_state,   tm_FBERT_STATE,   max_vector_size);
 
-//            }
+
+            //            // First attempt on an average.
+
+            //            // Average calculation.
+            //            shift_in_to_vector(&BER_avg, tm_BER, BER_avg_size);
+            //            BER_avg_cnt++;
+            //            if (BER_avg_cnt == BER_avg_size){
+            //                double sum = 0.0;
+            //                for (int i = 0; i < BER_avg_size; i++){
+            //                    sum += BER_avg[i];
+            //                }
+            //                sum = sum / BER_avg_size;
+            //                shift_in_to_vector(&BER, sum, max_vector_size);
+            //                BER_avg_cnt = 0;
+            //            } else {
+            //                // Just keep the plot rolling and append the last element.
+            //                shift_in_to_vector(&BER, BER.back(), max_vector_size);
+
+            //                double sum = 0.0;
+            //                // Calculate an average again.
+            //                for (int i = 0; i < max_vector_size; i++){
+            //                    sum += BER[i];
+            //                }
+            //                sum = sum / max_vector_size;
+            //                BER_avg_line.clear();
+            //                // Fill this vector with that average.
+            //                for (int i = 0; i < max_vector_size; i++){
+            //                    BER_avg_line.append(sum);
+            //                }
+            //            }
+
+
+
+            //print_to_terminal(QString::number(tm_BER));
+            // Here, let's average the real BER.
+            // The BERT runs over 20M words.
+            // 20M words * 64 bits = 128M bits.
+            tm_BER = tm_BER / (64.0*20000000);
+            shift_in_to_vector(&BER, tm_BER, max_vector_size);
+
+            // Now generate the average of the total BER.
+            double sum = 0.0;
+            for (int i = 0; i < max_vector_size; i++){
+                sum += BER[i];
+            }
+            sum = sum / max_vector_size; // Average.
+            BER_avg_line.clear();
+            for (int i = 0; i < max_vector_size; i++){
+                BER_avg_line.append(sum);
+            }
+
+            ui->label_BER_avg->setText(QString::number(sum));
+
+
+
+            double tm_RX_LOSS       = rx_data[4] & 0x01;
+            double tm_HEADER        = ((rx_data[4] & 0x06) >> 1);
+            double tm_RX_DATA_VALID = ((rx_data[4] & 0x08) >> 3);
+            double tm_FBERT_STATE   = ((rx_data[4] & 0x70) >> 4);
+            int correction_enable   = ((rx_data[4] & 0x80) >> 7);
+
+            shift_in_to_vector(&RX_LOSS,       tm_RX_LOSS,       max_vector_size);
+            shift_in_to_vector(&HEADER_VALID,  tm_HEADER,        max_vector_size);
+            shift_in_to_vector(&RX_DATA_VALID, tm_RX_DATA_VALID, max_vector_size);
+            shift_in_to_vector(&FBERT_state,   tm_FBERT_STATE,   max_vector_size);
+
+            if (correction_enable == 1){
+                ui->label_FEC_on_off->setText("ON");
+            } else {
+                ui->label_FEC_on_off->setText("OFF");
+            }
+            //print_to_terminal("correction_enable = " + QString::number(correction_enable));
+
         }
         break;
 

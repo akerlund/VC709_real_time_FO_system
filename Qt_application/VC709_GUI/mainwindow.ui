@@ -30,7 +30,7 @@
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -273,13 +273,41 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <widget class="QCustomPlot" name="plot_RX_Power" native="true"/>
+              <widget class="QCustomPlot" name="plot_RX_Power" native="true">
+               <zorder>groupBox</zorder>
+              </widget>
              </item>
             </layout>
            </widget>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QLabel" name="label_FEC_on_off">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>FEC ON</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_BER_avg">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QGroupBox" name="groupBox_7">
               <property name="title">

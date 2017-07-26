@@ -58,9 +58,13 @@ private:
 
 
 
-    static const int max_vector_size = 300;
+    static const int max_vector_size = 1000;
 
     QVector<double> BER;
+    QVector<double> BER_avg;
+    QVector<double> BER_avg_line;
+    int BER_avg_size;
+    int BER_avg_cnt;
 
     QVector<double> RX_LOSS;
     QVector<double> HEADER_VALID;
