@@ -84,7 +84,9 @@ architecture arch_transceiver_module_tb1 of transceiver_module_tb1 is
         FBERT_BER_out   : out std_logic_vector(31 downto 0);
         
         FBERT_time_interval   : in std_logic_vector(31 downto 0);
-        FBERT_state_out       : out std_logic_vector(2 downto 0)
+        FBERT_state_out       : out std_logic_vector(2 downto 0);
+        FBERT_error_injection : in  std_logic_vector(1 downto 0);
+        FBERT_FEC_on_off      : in  std_logic
     );
     end component;
 
@@ -134,12 +136,13 @@ architecture arch_transceiver_module_tb1 of transceiver_module_tb1 is
     signal FBERT_run_rdy_i : std_logic;
     signal FBERT_BER_out_i : std_logic_vector(31 downto 0);
     
-    signal FBERT_time_interval   : std_logic_vector(31 downto 0);
-    signal FBERT_state_out       : std_logic_vector(2 downto 0);
-    
     signal pre_FEC_FBERT_run_rdy_i : std_logic;
     signal pre_FEC_FBERT_BER_out_i : std_logic_vector(31 downto 0);
     
+    signal FBERT_time_interval   : std_logic_vector(31 downto 0);
+    signal FBERT_state_out       : std_logic_vector(2 downto 0);
+    signal FBERT_error_injection_i : std_logic_vector(1 downto 0);
+    signal FBERT_FEC_on_off_i      : std_logic;
     
     -- GTH_SIM
     signal gth_valid_out_i        : std_logic;
@@ -217,9 +220,13 @@ component transceiver_module
         FBERT_BER_out   => FBERT_BER_out_i , 
         
         FBERT_time_interval   => FBERT_time_interval,
-        FBERT_state_out       => FBERT_state_out
+        FBERT_state_out       => FBERT_state_out,
+        FBERT_error_injection => FBERT_error_injection_i,
+        FBERT_FEC_on_off      => FBERT_FEC_on_off_i
     );
 
+    FBERT_error_injection_i <= "00";
+    FBERT_FEC_on_off_i <= '1';
 
 GTH_SIM_0:
 component GTHE2_SIM

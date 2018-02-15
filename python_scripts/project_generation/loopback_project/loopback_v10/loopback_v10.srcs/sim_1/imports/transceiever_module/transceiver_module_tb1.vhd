@@ -172,11 +172,6 @@ architecture arch_transceiver_module_tb1 of transceiver_module_tb1 is
     signal rx_BER_CIRCUIT : components_type := BER_CIRCUIT;
 
     signal rx_FBERT : components_type := FBERT;
-    signal rx_pre_FEC_BER : components_type := PRE_FEC_BER;
-    signal rx_PRE_FEC_CALC : components_type := PRE_FEC_CALCULATOR;
-    signal rx_PRE_FEC_COMP : components_type := PRE_FEC_COMPRESSOR;
-    signal rx_PRE_FEC_ENC  : components_type := PRE_FEC_ENCODER;
-    signal rx_PRE_BER_CIRCUIT  : components_type := PRE_FEC_BER_CIRCUIT;
     
 begin
 

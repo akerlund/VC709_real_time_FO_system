@@ -150,6 +150,7 @@ architecture arch_VC709_I2C_inits of VC709_I2C_inits is
             x"2a", x"2b", x"2c", x"2d", x"2e", x"2f", x"30", x"37", x"83",
             x"84", x"89", x"8a", x"8b", x"8e", x"8f", x"88");
 
+    -- Generated values.
 --    constant SI5324_REG_DATA : SI5324_REG_ARRAY := ( 
 --            x"14", x"E4", x"32", x"15", x"92", x"ED", x"2D", x"2A", x"00",
 --            x"C0", x"08", x"42", x"29", x"3E", x"FF", x"DF", x"1F", x"3F",
@@ -167,7 +168,7 @@ architecture arch_VC709_I2C_inits of VC709_I2C_inits is
 
     -- Debug signals
     --signal debu_state : I2C_states := IDLE;
-    signal SI5324_index_cnt_debug : natural := 0; 
+    --signal SI5324_index_cnt_debug : natural := 0; 
 
 begin
 
@@ -210,6 +211,7 @@ begin
     elsif rising_edge(clk) then
         case curr_state is
 
+            -- This state waits for start to go high and keeps signals as their default. 
             when IDLE =>
 --debu_state <= IDLE;
 
@@ -242,7 +244,7 @@ begin
                     curr_state <= next_state;
                 end if;
 
-
+            -- Resets the MUXes by holding their reset pins low for a short while.
             when RESET_MUX =>
 --debu_state <= RESET_MUX;      
 
@@ -256,9 +258,9 @@ begin
                 end if;
 
 
-            -- Starting the configuration of the 9548 for MUXing to channel 4.
+            -- Starting the configuration of the 9548 for MUXing the signals to
+            -- to channel 4 where the 9548 MUX is connected.
             when CONF_9548 =>
---debu_state <= CONF_9548;
 
                 ena     <= '1';
                 addr    <= MUX9548_ADDRESS;   -- 9548 address.
@@ -273,9 +275,10 @@ begin
                 next_state <= CONF_9548_W_DELAY;
 
 
-            -- Waiting for the 9548 MUX to be configured.
+            -- Sets the enable port of the I2C low so it will not continue when it is finished.
+            -- the NEXT_STATE depends the device_sel port, but the current state changes into
+            -- WAIT_FOR_NOT_BUSY.
             when CONF_9548_W_DELAY =>
---debu_state <= CONF_9548_W_DELAY;
 
                 -- Once it is started we lower enable as it expects no more bytes.
                 ena <= '0';
@@ -291,9 +294,10 @@ begin
 
 
 
-            -- Starting the configuration of the 9546 for MUXing to channels 0-3.
+            -- Starting the configuration of the 9546 for MUXing to channels 0-3
+            -- which are connected to the SFPs. The current channel is saved in
+            -- the register MUX9546_SFP_CHANNEL.
             when CONF_9546 =>
---debu_state <= CONF_9546;
 
                 ena     <= '1';
                 addr    <= MUX9546_ADDRESS;   -- 9546 address.
@@ -303,10 +307,9 @@ begin
                 next_state <= CONF_9546_W_DELAY;
 
 
-            -- Waiting for the MUX to be configured
-            -- to the right channel for next SFP.
+            -- In this state the enable port is set low again, the next_state
+            -- is set to READ_SFP_REGISTER_1 and current state is set to WAIT_FOR_NOT_BUSY.
             when CONF_9546_W_DELAY =>
---debu_state <= CONF_9546_W_DELAY;
 
                 ena <= '0';
                 curr_state <= WAIT_FOR_NOT_BUSY;
@@ -314,7 +317,6 @@ begin
 
 
             when ADJUST_MUX =>
---debu_state <= ADJUST_MUX;
 
                 read_done <= '0';
 

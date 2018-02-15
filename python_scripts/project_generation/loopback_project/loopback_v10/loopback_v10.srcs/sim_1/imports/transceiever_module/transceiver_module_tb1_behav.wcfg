@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="40396080000fs"></ZoomStartTime>
-      <ZoomEndTime time="43966080001fs"></ZoomEndTime>
-      <Cursor1Time time="41000000000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="81600000000001fs"></ZoomEndTime>
+      <Cursor1Time time="45944040000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="194"></NameColumnWidth>
-      <ValueColumnWidth column_width="198"></ValueColumnWidth>
+      <ValueColumnWidth column_width="190"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="218" />
+   <WVObjectSize size="167" />
    <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_data_generator/reset_in">
       <obj_property name="ElementShortName">reset_in</obj_property>
       <obj_property name="ObjectShortName">reset_in</obj_property>
@@ -106,8 +106,8 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_expander/buf_out">
-      <obj_property name="ElementShortName">buf_out[112:0]</obj_property>
-      <obj_property name="ObjectShortName">buf_out[112:0]</obj_property>
+      <obj_property name="ElementShortName">buf_out[246:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_out[246:0]</obj_property>
       <obj_property name="CustomSignalColor">#800080</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
@@ -136,14 +136,14 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_synenc_reg/in_data">
-      <obj_property name="ElementShortName">in_data[112:0]</obj_property>
-      <obj_property name="ObjectShortName">in_data[112:0]</obj_property>
+      <obj_property name="ElementShortName">in_data[246:0]</obj_property>
+      <obj_property name="ObjectShortName">in_data[246:0]</obj_property>
       <obj_property name="CustomSignalColor">#FF0000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_synenc_reg/out_data">
-      <obj_property name="ElementShortName">out_data[126:0]</obj_property>
-      <obj_property name="ObjectShortName">out_data[126:0]</obj_property>
+      <obj_property name="ElementShortName">out_data[254:0]</obj_property>
+      <obj_property name="ObjectShortName">out_data[254:0]</obj_property>
       <obj_property name="CustomSignalColor">#FF0000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
@@ -159,47 +159,73 @@
       <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/user_clk">
-      <obj_property name="ElementShortName">user_clk</obj_property>
-      <obj_property name="ObjectShortName">user_clk</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/enable_in">
       <obj_property name="ElementShortName">enable_in</obj_property>
       <obj_property name="ObjectShortName">enable_in</obj_property>
       <obj_property name="CustomSignalColor">#008080</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/congestion_out">
-      <obj_property name="ElementShortName">congestion_out</obj_property>
-      <obj_property name="ObjectShortName">congestion_out</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/in_rdy">
-      <obj_property name="ElementShortName">in_rdy</obj_property>
-      <obj_property name="ObjectShortName">in_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/data_in">
-      <obj_property name="ElementShortName">data_in[126:0]</obj_property>
-      <obj_property name="ObjectShortName">data_in[126:0]</obj_property>
+      <obj_property name="ElementShortName">data_in[254:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[254:0]</obj_property>
       <obj_property name="CustomSignalColor">#008080</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/buf_out">
-      <obj_property name="ElementShortName">buf_out[63:0]</obj_property>
-      <obj_property name="ObjectShortName">buf_out[63:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/data_in_rdy">
+      <obj_property name="ElementShortName">data_in_rdy</obj_property>
+      <obj_property name="ObjectShortName">data_in_rdy</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/out_rdy">
-      <obj_property name="ElementShortName">out_rdy</obj_property>
-      <obj_property name="ObjectShortName">out_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/input_full">
+      <obj_property name="ElementShortName">input_full</obj_property>
+      <obj_property name="ObjectShortName">input_full</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/input_register">
+      <obj_property name="ElementShortName">input_register[317:0]</obj_property>
+      <obj_property name="ObjectShortName">input_register[317:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/nr_of_output_words_r0">
+      <obj_property name="ElementShortName">nr_of_output_words_r0</obj_property>
+      <obj_property name="ObjectShortName">nr_of_output_words_r0</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/nr_of_output_words_r1">
+      <obj_property name="ElementShortName">nr_of_output_words_r1</obj_property>
+      <obj_property name="ObjectShortName">nr_of_output_words_r1</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/bits_in_input_register">
+      <obj_property name="ElementShortName">bits_in_input_register</obj_property>
+      <obj_property name="ObjectShortName">bits_in_input_register</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/bits_in_input_register_after_move">
+      <obj_property name="ElementShortName">bits_in_input_register_after_move</obj_property>
+      <obj_property name="ObjectShortName">bits_in_input_register_after_move</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/INPUT_STATE">
+      <obj_property name="ElementShortName">INPUT_STATE</obj_property>
+      <obj_property name="ObjectShortName">INPUT_STATE</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/OUTPUT_STATE">
+      <obj_property name="ElementShortName">OUTPUT_STATE</obj_property>
+      <obj_property name="ObjectShortName">OUTPUT_STATE</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/output_register">
+      <obj_property name="ElementShortName">output_register[255:0]</obj_property>
+      <obj_property name="ObjectShortName">output_register[255:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/start_outputting">
+      <obj_property name="ElementShortName">start_outputting</obj_property>
+      <obj_property name="ObjectShortName">start_outputting</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/is_outputting">
+      <obj_property name="ElementShortName">is_outputting</obj_property>
+      <obj_property name="ObjectShortName">is_outputting</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/data_out">
+      <obj_property name="ElementShortName">data_out[63:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/tx_word_compressor/data_out_rdy">
+      <obj_property name="ElementShortName">data_out_rdy</obj_property>
+      <obj_property name="ObjectShortName">data_out_rdy</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/transceiver_module_tb1/tx_COMPRESSOR_BUFFER">
       <obj_property name="ElementShortName">tx_COMPRESSOR_BUFFER</obj_property>
@@ -687,8 +713,8 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_expander/buf_out">
-      <obj_property name="ElementShortName">buf_out[126:0]</obj_property>
-      <obj_property name="ObjectShortName">buf_out[126:0]</obj_property>
+      <obj_property name="ElementShortName">buf_out[254:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_out[254:0]</obj_property>
       <obj_property name="CustomSignalColor">#808000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
@@ -711,14 +737,14 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_bch_peterson/x">
-      <obj_property name="ElementShortName">x[126:0]</obj_property>
-      <obj_property name="ObjectShortName">x[126:0]</obj_property>
+      <obj_property name="ElementShortName">x[254:0]</obj_property>
+      <obj_property name="ObjectShortName">x[254:0]</obj_property>
       <obj_property name="CustomSignalColor">#FF0000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_bch_peterson/E">
-      <obj_property name="ElementShortName">E[112:0]</obj_property>
-      <obj_property name="ObjectShortName">E[112:0]</obj_property>
+      <obj_property name="ElementShortName">E[246:0]</obj_property>
+      <obj_property name="ObjectShortName">E[246:0]</obj_property>
       <obj_property name="CustomSignalColor">#FF0000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
@@ -728,35 +754,45 @@
       <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/user_clk">
-      <obj_property name="ElementShortName">user_clk</obj_property>
-      <obj_property name="ObjectShortName">user_clk</obj_property>
-      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/clk_in">
+      <obj_property name="ElementShortName">clk_in</obj_property>
+      <obj_property name="ObjectShortName">clk_in</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/in_rdy">
-      <obj_property name="ElementShortName">in_rdy</obj_property>
-      <obj_property name="ObjectShortName">in_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/data_in">
+      <obj_property name="ElementShortName">data_in[246:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[246:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/congestion_out">
-      <obj_property name="ElementShortName">congestion_out</obj_property>
-      <obj_property name="ObjectShortName">congestion_out</obj_property>
-      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/data_in_rdy">
+      <obj_property name="ElementShortName">data_in_rdy</obj_property>
+      <obj_property name="ObjectShortName">data_in_rdy</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/out_rdy">
-      <obj_property name="ElementShortName">out_rdy</obj_property>
-      <obj_property name="ObjectShortName">out_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/start_outputting">
+      <obj_property name="ElementShortName">start_outputting</obj_property>
+      <obj_property name="ObjectShortName">start_outputting</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/buf_out">
-      <obj_property name="ElementShortName">buf_out[63:0]</obj_property>
-      <obj_property name="ObjectShortName">buf_out[63:0]</obj_property>
-      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/is_outputting">
+      <obj_property name="ElementShortName">is_outputting</obj_property>
+      <obj_property name="ObjectShortName">is_outputting</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/input_full">
+      <obj_property name="ElementShortName">input_full</obj_property>
+      <obj_property name="ObjectShortName">input_full</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/INPUT_STATE">
+      <obj_property name="ElementShortName">INPUT_STATE</obj_property>
+      <obj_property name="ObjectShortName">INPUT_STATE</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/OUTPUT_STATE">
+      <obj_property name="ElementShortName">OUTPUT_STATE</obj_property>
+      <obj_property name="ObjectShortName">OUTPUT_STATE</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/data_out_rdy">
+      <obj_property name="ElementShortName">data_out_rdy</obj_property>
+      <obj_property name="ObjectShortName">data_out_rdy</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/rx_word_compressor/data_out">
+      <obj_property name="ElementShortName">data_out[63:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[63:0]</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/transceiver_module_tb1/rx_FBERT">
       <obj_property name="ElementShortName">rx_FBERT</obj_property>
@@ -916,350 +952,5 @@
       <obj_property name="ObjectShortName">errors[15:0]</obj_property>
       <obj_property name="CustomSignalColor">#FFA500</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/rx_PRE_FEC_COMP">
-      <obj_property name="ElementShortName">rx_PRE_FEC_COMP</obj_property>
-      <obj_property name="ObjectShortName">rx_PRE_FEC_COMP</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/reset_in">
-      <obj_property name="ElementShortName">reset_in</obj_property>
-      <obj_property name="ObjectShortName">reset_in</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/user_clk">
-      <obj_property name="ElementShortName">user_clk</obj_property>
-      <obj_property name="ObjectShortName">user_clk</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/enable_in">
-      <obj_property name="ElementShortName">enable_in</obj_property>
-      <obj_property name="ObjectShortName">enable_in</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/bits_in_buffer">
-      <obj_property name="ElementShortName">bits_in_buffer</obj_property>
-      <obj_property name="ObjectShortName">bits_in_buffer</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/in_rdy">
-      <obj_property name="ElementShortName">in_rdy</obj_property>
-      <obj_property name="ObjectShortName">in_rdy</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/data_in">
-      <obj_property name="ElementShortName">data_in[511:0]</obj_property>
-      <obj_property name="ObjectShortName">data_in[511:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/congestion_out">
-      <obj_property name="ElementShortName">congestion_out</obj_property>
-      <obj_property name="ObjectShortName">congestion_out</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/bits_in_buffer">
-      <obj_property name="ElementShortName">bits_in_buffer</obj_property>
-      <obj_property name="ObjectShortName">bits_in_buffer</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/out_rdy">
-      <obj_property name="ElementShortName">out_rdy</obj_property>
-      <obj_property name="ObjectShortName">out_rdy</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/buf_out">
-      <obj_property name="ElementShortName">buf_out[112:0]</obj_property>
-      <obj_property name="ObjectShortName">buf_out[112:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_in_rdy_r0">
-      <obj_property name="ElementShortName">word_compressor_in_rdy_r0</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_in_rdy_r0</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_in_rdy_r1">
-      <obj_property name="ElementShortName">word_compressor_in_rdy_r1</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_in_rdy_r1</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/rx_PRE_FEC_ENC">
-      <obj_property name="ElementShortName">rx_PRE_FEC_ENC</obj_property>
-      <obj_property name="ObjectShortName">rx_PRE_FEC_ENC</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/synenc_reg_0/ena">
-      <obj_property name="ElementShortName">ena</obj_property>
-      <obj_property name="ObjectShortName">ena</obj_property>
-      <obj_property name="CustomSignalColor">#FF0000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/synenc_reg_0/clk">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-      <obj_property name="CustomSignalColor">#FF0000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/synenc_reg_0/in_data">
-      <obj_property name="ElementShortName">in_data[112:0]</obj_property>
-      <obj_property name="ObjectShortName">in_data[112:0]</obj_property>
-      <obj_property name="CustomSignalColor">#FF0000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/synenc_reg_0/out_data">
-      <obj_property name="ElementShortName">out_data[126:0]</obj_property>
-      <obj_property name="ObjectShortName">out_data[126:0]</obj_property>
-      <obj_property name="CustomSignalColor">#FF0000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/rx_PRE_BER_CIRCUIT">
-      <obj_property name="ElementShortName">rx_PRE_BER_CIRCUIT</obj_property>
-      <obj_property name="ObjectShortName">rx_PRE_BER_CIRCUIT</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/user_clk">
-      <obj_property name="ElementShortName">user_clk</obj_property>
-      <obj_property name="ObjectShortName">user_clk</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/reset_in">
-      <obj_property name="ElementShortName">reset_in</obj_property>
-      <obj_property name="ObjectShortName">reset_in</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/in_rdy">
-      <obj_property name="ElementShortName">in_rdy</obj_property>
-      <obj_property name="ObjectShortName">in_rdy</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/out_rdy">
-      <obj_property name="ElementShortName">out_rdy</obj_property>
-      <obj_property name="ObjectShortName">out_rdy</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/data_in">
-      <obj_property name="ElementShortName">data_in[127:0]</obj_property>
-      <obj_property name="ObjectShortName">data_in[127:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/ref_in">
-      <obj_property name="ElementShortName">ref_in[127:0]</obj_property>
-      <obj_property name="ObjectShortName">ref_in[127:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_128_bit_input_comp_0/errors">
-      <obj_property name="ElementShortName">errors[15:0]</obj_property>
-      <obj_property name="ObjectShortName">errors[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/rx_PRE_FEC_CALC">
-      <obj_property name="ElementShortName">rx_PRE_FEC_CALC</obj_property>
-      <obj_property name="ObjectShortName">rx_PRE_FEC_CALC</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/rx_clk">
-      <obj_property name="ElementShortName">rx_clk</obj_property>
-      <obj_property name="ObjectShortName">rx_clk</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/reset_in">
-      <obj_property name="ElementShortName">reset_in</obj_property>
-      <obj_property name="ObjectShortName">reset_in</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/in_rdy">
-      <obj_property name="ElementShortName">in_rdy</obj_property>
-      <obj_property name="ObjectShortName">in_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/received_data_in">
-      <obj_property name="ElementShortName">received_data_in[126:0]</obj_property>
-      <obj_property name="ObjectShortName">received_data_in[126:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/out_rdy">
-      <obj_property name="ElementShortName">out_rdy</obj_property>
-      <obj_property name="ObjectShortName">out_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/errors_out">
-      <obj_property name="ElementShortName">errors_out[15:0]</obj_property>
-      <obj_property name="ObjectShortName">errors_out[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_reset_in_i">
-      <obj_property name="ElementShortName">BER_circuit_reset_in_i</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_reset_in_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_in_rdy_i">
-      <obj_property name="ElementShortName">BER_circuit_in_rdy_i</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_in_rdy_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_out_rdy_i">
-      <obj_property name="ElementShortName">BER_circuit_out_rdy_i</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_out_rdy_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_data_in_i">
-      <obj_property name="ElementShortName">BER_circuit_data_in_i[127:0]</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_data_in_i[127:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_ref_in_i">
-      <obj_property name="ElementShortName">BER_circuit_ref_in_i[127:0]</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_ref_in_i[127:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/BER_circuit_errors_i">
-      <obj_property name="ElementShortName">BER_circuit_errors_i[15:0]</obj_property>
-      <obj_property name="ObjectShortName">BER_circuit_errors_i[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/ROM_ref_cnt">
-      <obj_property name="ElementShortName">ROM_ref_cnt</obj_property>
-      <obj_property name="ObjectShortName">ROM_ref_cnt</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_enable_in_i">
-      <obj_property name="ElementShortName">word_compressor_enable_in_i</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_enable_in_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_congestion_i">
-      <obj_property name="ElementShortName">word_compressor_congestion_i</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_congestion_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_data_in_i">
-      <obj_property name="ElementShortName">word_compressor_data_in_i[511:0]</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_data_in_i[511:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_in_rdy_i">
-      <obj_property name="ElementShortName">word_compressor_in_rdy_i</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_in_rdy_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_buf_out_i">
-      <obj_property name="ElementShortName">word_compressor_buf_out_i[112:0]</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_buf_out_i[112:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_out_rdy_i">
-      <obj_property name="ElementShortName">word_compressor_out_rdy_i</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_out_rdy_i</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_out_rdy_r0">
-      <obj_property name="ElementShortName">word_compressor_out_rdy_r0</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_out_rdy_r0</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_out_rdy_r1">
-      <obj_property name="ElementShortName">word_compressor_out_rdy_r1</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_out_rdy_r1</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_out_rdy_r2">
-      <obj_property name="ElementShortName">word_compressor_out_rdy_r2</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_out_rdy_r2</obj_property>
-      <obj_property name="CustomSignalColor">#008000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor_out_rdy_r3">
-      <obj_property name="ElementShortName">word_compressor_out_rdy_r3</obj_property>
-      <obj_property name="ObjectShortName">word_compressor_out_rdy_r3</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/received_data_in_r0">
-      <obj_property name="ElementShortName">received_data_in_r0[126:0]</obj_property>
-      <obj_property name="ObjectShortName">received_data_in_r0[126:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/received_data_in_r1">
-      <obj_property name="ElementShortName">received_data_in_r1[126:0]</obj_property>
-      <obj_property name="ObjectShortName">received_data_in_r1[126:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/received_data_in_r2">
-      <obj_property name="ElementShortName">received_data_in_r2[126:0]</obj_property>
-      <obj_property name="ObjectShortName">received_data_in_r2[126:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/received_data_in_r3">
-      <obj_property name="ElementShortName">received_data_in_r3[126:0]</obj_property>
-      <obj_property name="ObjectShortName">received_data_in_r3[126:0]</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/rx_pre_FEC_BER">
-      <obj_property name="ElementShortName">rx_pre_FEC_BER</obj_property>
-      <obj_property name="ObjectShortName">rx_pre_FEC_BER</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/rx_clk">
-      <obj_property name="ElementShortName">rx_clk</obj_property>
-      <obj_property name="ObjectShortName">rx_clk</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/reset_in">
-      <obj_property name="ElementShortName">reset_in</obj_property>
-      <obj_property name="ObjectShortName">reset_in</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/BER_data_in">
-      <obj_property name="ElementShortName">BER_data_in[15:0]</obj_property>
-      <obj_property name="ObjectShortName">BER_data_in[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/BER_in_rdy">
-      <obj_property name="ElementShortName">BER_in_rdy</obj_property>
-      <obj_property name="ObjectShortName">BER_in_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/run_rdy">
-      <obj_property name="ElementShortName">run_rdy</obj_property>
-      <obj_property name="ObjectShortName">run_rdy</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/BER_out">
-      <obj_property name="ElementShortName">BER_out[31:0]</obj_property>
-      <obj_property name="ObjectShortName">BER_out[31:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/total_errors_detected">
-      <obj_property name="ElementShortName">total_errors_detected[31:0]</obj_property>
-      <obj_property name="ObjectShortName">total_errors_detected[31:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/clock_cnt">
-      <obj_property name="ElementShortName">clock_cnt[31:0]</obj_property>
-      <obj_property name="ObjectShortName">clock_cnt[31:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_FBERT_comp/clock_max">
-      <obj_property name="ElementShortName">clock_max[31:0]</obj_property>
-      <obj_property name="ObjectShortName">clock_max[31:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/transceiver_module_tb1/transceiver_module_0/pre_FEC_BER_calculator_comp/word_compressor/bits_in_buffer">
-      <obj_property name="ElementShortName">bits_in_buffer</obj_property>
-      <obj_property name="ObjectShortName">bits_in_buffer</obj_property>
    </wvobject>
 </wave_config>

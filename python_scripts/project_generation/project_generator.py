@@ -1,21 +1,20 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+# Made by 1337 h4xx0r freakuency
 
+# This script will generated transceiver module VHDL components,
+# and new projects with those files included.
 
+import time, os, shutil			# 
 
-# This script will generated transceiver module VHDL components.
-# Also new projects with these files included.
-
-import time, os, shutil
-
-# All these generators are for changing the 'k' and 'n' generics all around the projects.
-# Keeps a copy of the files and inserts them wherever needed.
 import tm_generator				# Transceiever modules
 import bch_peterson_generator	# The decoder top
-import compressor_generator		# 
-import expander_generator		# 
+import compressor_generator		# Makes the old bad ones.
+import compressor_generator_v2 	# New more area efficient.
+import expander_generator		# Makes any expander type.
 import exdes_top_generator		# The example design's top which all is based upon
 import transceiver_module_tb1_generator
+import encoder_generator
 
 def ensure_dir(file_path):
     #directory = os.path.dirname(file_path) # NO, wrong, bad stackoverflow, bad.
@@ -37,6 +36,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
 			if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
 				shutil.copy2(s, d)
 
+print("\nVivado transceiver-project generator v1.0\n")
 
 MAIN_DIRECTORY  = "/home/freakuency/Documents/VC709_real_time_FO_system"
 FEC_FILES_DIR   = MAIN_DIRECTORY + "/FEC_files"
@@ -44,16 +44,20 @@ REF_PROJECT_DIR = "./xilinx_project" # So, in the same folder as this script.
 DEST_DIR        = "./generated_projects"
 LOOPBACK_DIR    = "./loopback_project"
 
+NR_OF_TRANSCEIVERS = 4 # 1 generates one tm in the top module, not 1 generates four.
 
 # Make the new projects names dependent on what FEC files there are.
 # So, first we make a list of all folders containing FEC .vhd files.
 # We will use them to name projecs and their folders.
 
 FEC_FOLDERS = os.listdir(FEC_FILES_DIR)
-print(FEC_FOLDERS)
+print("Found these FEC folders:")
+for folder in FEC_FOLDERS:
+	print(folder)
 
 
 # Removing one register from all encoders.
+print("\nRemoving the input-register from all encoders.")
 for FEC_FOLDER in FEC_FOLDERS:
 	temp = ""
 	for line in open(FEC_FILES_DIR+"/"+FEC_FOLDER+"/enc_reg.vhd"):
@@ -67,6 +71,7 @@ for FEC_FOLDER in FEC_FOLDERS:
 		file.write(temp)
 
 # From the names, we take out the n,k and t
+print("\nExtracting the n,k and t from the names.")
 FEC_NUMBERS = []
 for FEC in FEC_FOLDERS:
 	temp = FEC
@@ -76,11 +81,12 @@ for FEC in FEC_FOLDERS:
 	temp = temp.replace('_',' ')
 	FEC_NUMBERS.append([int(s) for s in temp.split() if s.isdigit()])
 
-print(FEC_NUMBERS)
+#print(FEC_NUMBERS)
 
 
 
 # Making all the project names.
+print("\nMaking project names.")
 PROJECT_NAMES = []
 for fec_nrs in FEC_NUMBERS:
 	if fec_nrs:
@@ -94,18 +100,23 @@ for fec_nrs in FEC_NUMBERS:
 # 	print(name)
 
 # Now we make all the folders for the projects.
+print("\nMaking the folders.")
 ensure_dir(DEST_DIR)
 PROJECT_FOLDERS = []
+dir_existed = False
 for proj_folder in PROJECT_NAMES:
-	print(DEST_DIR + "/" + proj_folder)
+	#print(DEST_DIR + "/" + proj_folder)
 	temp = DEST_DIR + "/" + proj_folder
 	PROJECT_FOLDERS.append(temp)
-	print(ensure_dir(temp))
+	dir_existed = ensure_dir(temp)
+	print("Project folder: \"%s\" already exists is \"%s\""%(proj_folder,dir_existed))
 
 
-# Copying the ref project to all folders.
+# Copying the reference project to all folders.
+print("\nGenerating all project's files.")
 cnt = 0
 for proj_folder in PROJECT_FOLDERS:
+	print("%i: %s"%(cnt+1,proj_folder))
 	copytree(REF_PROJECT_DIR,proj_folder)
 
 	# At the same time we are making the folder for all files
@@ -144,22 +155,32 @@ for proj_folder in PROJECT_FOLDERS:
 
 	# Generating the Compressors:
 	COMP_FILENAME1 = "word_compressor_" + str(FEC_NUMBERS[cnt][1]) + "IN_to_" + str(64) + "OUT.vhd"
-	comp1 = compressor_generator.gen_compressor(FEC_NUMBERS[cnt][1],64)
+	comp1 = compressor_generator_v2.gen_compressor(FEC_NUMBERS[cnt][1],64)
 	with open(proj_folder+"/import_these"+"/"+COMP_FILENAME1,'w') as comp_file:
 		comp_file.write(comp1)
 
 	COMP_FILENAME2 = "word_compressor_" + str(FEC_NUMBERS[cnt][2]) + "IN_to_" + str(64) + "OUT.vhd"
-	comp2 = compressor_generator.gen_compressor(FEC_NUMBERS[cnt][2],64)
+	comp2 = compressor_generator_v2.gen_compressor(FEC_NUMBERS[cnt][2],64)
 	with open(proj_folder+"/import_these"+"/"+COMP_FILENAME2,'w') as comp_file:
 		comp_file.write(comp2)
+
+	# Generating the encoder with error injection.
+	ENCODER_FILENAME = "enc_reg.vhd"
+	encoder = encoder_generator.enc_generator(FEC_NUMBERS[cnt][1],FEC_NUMBERS[cnt][2]) # (k,n)
+	with open(proj_folder+"/import_these"+"/"+ENCODER_FILENAME,'w') as enc_file:
+		enc_file.write(encoder)
+
+
 
 	# Generating the example top module
 	EXDES_FILENAME = "gtwizard_0_exdes.vhd"
 	with open(proj_folder+"/gtwizard_0_example/gtwizard_0_example.srcs/sources_1/imports/example_design/"+EXDES_FILENAME,'w') as ex_file:
-		ex = exdes_top_generator.exdes_generator(FEC_NUMBERS[cnt][1],FEC_NUMBERS[cnt][2],1)
+		ex = exdes_top_generator.exdes_generator(FEC_NUMBERS[cnt][1],FEC_NUMBERS[cnt][2],NR_OF_TRANSCEIVERS)
 		ex_file.write(ex)
 
 
+
+	# Generating the decoder with on/off function
 
 
 	# Now we generate the loopback simulation projects
@@ -186,6 +207,11 @@ for proj_folder in PROJECT_FOLDERS:
 	with open(proj_folder+"/import_these_loopback_files"+"/transceiver_module.vhd",'w') as tm_file:
 		tm_file.write(tm)
 	copytree(FEC_FILES_DIR+"/"+FEC_FOLDERS[cnt],proj_folder+"/import_these_loopback_files")
+	# Nnow we overwrite enc_reg.vhd
+	with open(proj_folder+"/import_these_loopback_files"+"/"+ENCODER_FILENAME,'w') as enc_file:
+		enc_file.write(encoder)
 
 
 	cnt += 1
+
+print("\nProject generation complete. Gud luck!\n")

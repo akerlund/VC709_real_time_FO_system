@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QByteArray>
 #include <QSerialPort>
+#include <QElapsedTimer>
 
 
 #include "qcustomplot.h"
@@ -24,28 +25,29 @@ public:
 
 private slots:
 
-    void q_timer_event( );
     void serial_RX_event( );
     void serialPortError(QSerialPort::SerialPortError error);
 
-    void on_btn_SYSCLK_clicked();
-    void on_btn_run_time_clicked();
     void on_btn_serial_refresh_clicked();
     void on_btn_serial_connect_clicked();
-
     void on_btn_serial_disconnect_clicked();
+
+    void q_timer_50Hz_event( );
+    void q_timer_10Hz_event( );
+
+
+    void on_pushButton_cont_BER_clicked();
 
 private:
 
     Ui::MainWindow *ui;
 
     QSerialPort *serial_port;
-    QLabel *status_label;
-    QTimer *q_timer;
+    QLabel *status_label; // Displays the serial status at bottom right.
 
-    double sin_shifter;
-    double SYSCLK;
-    int run_time;
+    QTimer *q_timer_50Hz;
+    QTimer *q_timer_10Hz;
+
 
     // RX variables
     int rx_state;
@@ -55,16 +57,22 @@ private:
     char unsigned rx_buffer[2048];
     int rx_buf_pointer;
 
+    int FBERT_run_time;
 
 
-
-    static const int max_vector_size = 1000;
+    int max_vector_size;
+    QVector<double> x_axis; // This one we fill up with (0,1,2, ... max_vector_size)
+                            // because at the moment I do not know any better.
 
     QVector<double> BER;
-    QVector<double> BER_avg;
     QVector<double> BER_avg_line;
-    int BER_avg_size;
-    int BER_avg_cnt;
+
+    double BER_accumulator; // Saving BER in long runs.
+    int nr_of_BER_accumulated;
+    QElapsedTimer *elapse_timer;
+    int last_received_BER; // Used for not counting in copies.
+    int last_received_BER_counter;
+
 
     QVector<double> RX_LOSS;
     QVector<double> HEADER_VALID;
@@ -92,6 +100,7 @@ private:
     QVector<double> SFP3_TX_PWR;
     QVector<double> SFP3_RX_PWR;
 
+    // Functions.
     void init_plots( );
     void process_RX_data(QByteArray &data);
     void process_RX_package(char unsigned *rx_data, int received_bytes);

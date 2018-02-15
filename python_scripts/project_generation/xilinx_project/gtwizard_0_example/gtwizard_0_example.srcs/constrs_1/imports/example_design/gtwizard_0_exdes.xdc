@@ -122,13 +122,9 @@ set_property LOC GTHE2_CHANNEL_X1Y15 [get_cells gtwizard_0_support_i/gtwizard_0_
 set_property PACKAGE_PIN AT36    [get_ports SI5324_RST_LS]
 set_property IOSTANDARD LVCMOS18 [get_ports SI5324_RST_LS]
 
-#set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports SI5324_RST_LS]
-#set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports SI5324_RST_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports SI5324_RST_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports SI5324_RST_LS]
 
-#set_input_delay -clock [get_clocks Clkif] -min 0.530 [get_ports DIN]
-#set_input_delay -clock [get_clocks Clkif] -max 7.700 [get_ports DIN]
-#set_output_delay -clock [get_clocks Clkif] -min -0.030 [get_ports DOUT]
-#set_output_delay -clock [get_clocks Clkif] -max 1.800 [get_ports DOUT]
 
 #SFP1
 #set_property PACKAGE_PIN Y39            [get_ports {SFP_LOS[0]}]
@@ -152,8 +148,8 @@ set_property PACKAGE_PIN AP3            [get_ports {SFP_TX_N[0]}]
 set_property PACKAGE_PIN AP4            [get_ports {SFP_TX_P[0]}]
 
 
-#set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports SFP_LOS_0]
-#set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports SFP_LOS_0]
+set_input_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports SFP_LOS_0]
+set_input_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports SFP_LOS_0]
 
 #SFP2
 #set_property PACKAGE_PIN AA40           [get_ports {SFP_LOS[1]}]
@@ -227,6 +223,24 @@ set_property IOSTANDARD LVCMOS18 [get_ports {GPIO_LED[6]}]
 set_property PACKAGE_PIN AU39 	 [get_ports {GPIO_LED[7]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {GPIO_LED[7]}]
 
+
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[0]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[0]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[1]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[1]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[2]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[2]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[3]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[3]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[4]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[4]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[5]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[5]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[6]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[6]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports {GPIO_LED[7]}]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports {GPIO_LED[7]}]
+
 #DIP
 set_property PACKAGE_PIN AV30 	 [get_ports {GPIO_DIP[0]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {GPIO_DIP[0]}]
@@ -245,12 +259,29 @@ set_property IOSTANDARD LVCMOS18 [get_ports {GPIO_DIP[6]}]
 set_property PACKAGE_PIN BB31 	 [get_ports {GPIO_DIP[7]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {GPIO_DIP[7]}]
 
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[0]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[0]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[1]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[1]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[2]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[2]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[3]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[3]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[4]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[4]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[5]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[5]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[6]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[6]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -min -0.000 [get_ports {GPIO_DIP[7]}]
+#set_input_delay -clock [get_clocks gt0_rxusrclk2_i] -max  1.000 [get_ports {GPIO_DIP[7]}]
+
 #CPU RESET
 set_property PACKAGE_PIN AV40    [get_ports CPU_RESET]
 set_property IOSTANDARD LVCMOS18 [get_ports CPU_RESET]
 
-#set_input_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports CPU_RESET]
-#set_input_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports CPU_RESET]
+set_input_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports CPU_RESET]
+set_input_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports CPU_RESET]
 
 #USB UART
 set_property PACKAGE_PIN AU36    [get_ports USB_UART_RX]
@@ -263,8 +294,10 @@ set_property IOSTANDARD LVCMOS18 [get_ports USB_UART_TX]
 #set_property IOSTANDARD LVCMOS18 [get_ports USB_UART_RTS]
 
 
-#set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports USB_UART_RX]
-#set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports USB_UART_RX]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports USB_UART_RX]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports USB_UART_RX]
+set_input_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports USB_UART_TX]
+set_input_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports USB_UART_TX]
 
 #IIC
 set_property PACKAGE_PIN AY42 [get_ports IIC_MUX_RESET_B_LS]
@@ -275,12 +308,17 @@ set_property PACKAGE_PIN AU32 [get_ports IIC_SDA_MAIN_LS]
 set_property IOSTANDARD LVCMOS18 [get_ports IIC_SDA_MAIN_LS]
 
 
-#set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_MUX_RESET_B_LS]
-#set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_MUX_RESET_B_LS]
-#set_input_delay  -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SCL_MAIN_LS]
-#set_input_delay  -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SCL_MAIN_LS]
-#set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SDA_MAIN_LS]
-#set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SDA_MAIN_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_MUX_RESET_B_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_MUX_RESET_B_LS]
+set_input_delay  -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SCL_MAIN_LS]
+set_input_delay  -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SCL_MAIN_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SCL_MAIN_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SCL_MAIN_LS]
+
+set_input_delay  -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SDA_MAIN_LS]
+set_input_delay  -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SDA_MAIN_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports IIC_SDA_MAIN_LS]
+set_output_delay -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports IIC_SDA_MAIN_LS]
 
 #FAN
 set_property PACKAGE_PIN BA37 [get_ports SM_FAN_PWM]
@@ -308,3 +346,7 @@ set_property IOSTANDARD LVCMOS18 [get_ports GPIO_SW_C]
 #set_property IOSTANDARD LVCMOS18 [get_ports GPIO_SW_S]
 #set_property PACKAGE_PIN AW40 [get_ports GPIO_SW_W]
 #set_property IOSTANDARD LVCMOS18 [get_ports GPIO_SW_W]
+
+
+#set_input_delay  -clock [get_clocks drpclk_in_i] -min -0.000 [get_ports GPIO_SW_C]
+#set_input_delay  -clock [get_clocks drpclk_in_i] -max  1.000 [get_ports GPIO_SW_C]

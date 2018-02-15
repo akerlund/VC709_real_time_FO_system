@@ -1,12 +1,8 @@
-
-
-
 def gen_compressor_tb(IN_WIDTH, OUT_WIDTH):
 
 	ENTITY_NAME = "word_compressor_" + str(IN_WIDTH) + "IN_to_" + str(OUT_WIDTH) + "OUT_tb1"
 
-	body = """
-----------------------------------------------------------------------------------
+	body = """----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: 
 -- 
@@ -26,12 +22,9 @@ def gen_compressor_tb(IN_WIDTH, OUT_WIDTH):
 -- 
 ----------------------------------------------------------------------------------
 
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 """
-
-
 
 	body += "use work.word_expander_package_for_D" + str(OUT_WIDTH) + "_N" + str(IN_WIDTH) + ".all;\n"
 
@@ -76,8 +69,6 @@ architecture """
 
 	body += "    component word_compressor_" + str(IN_WIDTH) + "IN_to_" + str(OUT_WIDTH) + "OUT is\n"
 
-
-
 	body += """
         port(
             clk_in       : in  std_logic;       
@@ -89,7 +80,6 @@ architecture """
 	body += "            data_in_rdy    : in  std_logic;\n"
     
 	body += "            data_out       : out std_logic_vector(OUT_WIDTH-1 downto 0);\n"
-
 
 	body += """
             data_out_rdy   : out std_logic;

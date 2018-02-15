@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-CORRECTION_ENABLE = False
+CORRECTION_ENABLE = True
 import sys
 import math
 
@@ -35,7 +35,7 @@ entity bch_peterson is
 """
 
     if CORRECTION_ENABLE:
-        bch += "        correction_enable : in  std_logic;\n"
+        bch += "        on_off : in  std_logic;\n"
 
     bch += """        x      : in  std_logic_vector(n-1 downto 0);-- Change to n
         E      : out std_logic_vector(k-1 downto 0)
@@ -71,7 +71,7 @@ begin
             synd_reg <= synd_sig;
 """
     if CORRECTION_ENABLE:
-        bch += "            if correction_enable = '1' then\n"
+        bch += "            if on_off = '1' then\n"
         if int(t) == 3:
             bch += "                E <= E_sig(n-1 downto n-k) xor x1_reg(n-1 downto n-k);\n"
         else:

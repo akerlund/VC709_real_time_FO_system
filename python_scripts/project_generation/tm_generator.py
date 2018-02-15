@@ -25,7 +25,8 @@ def make_tm(k,n):
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments:
+-- Additional Comments: Pro tip: set_msg_config -id "Synth 8-6014" -limit 1000
+--                                to see many unsequential elements removed.
 -- 
 ----------------------------------------------------------------------------------
 
@@ -81,7 +82,9 @@ entity transceiver_module is
         FBERT_BER_out   : out std_logic_vector(31 downto 0);
         
         FBERT_time_interval   : in  std_logic_vector(31 downto 0);
-        FBERT_state_out       : out std_logic_vector(2 downto 0)
+        FBERT_state_out       : out std_logic_vector(2 downto 0);
+        FBERT_error_injection : in  std_logic_vector(1 downto 0);
+        FBERT_FEC_on_off      : in  std_logic
     );
 
 end transceiver_module;
@@ -176,38 +179,36 @@ architecture arch_transceiver_module of transceiver_module is
     tm += "    component word_compressor_"+n+"IN_to_64OUT is"
     tm += """
     port(
-        user_clk       : in  std_logic;       
-        reset_in       : in  std_logic;
-    
-        enable_in      : in  std_logic;
-        congestion_out : out std_logic;
-    
-        data_in        : in  std_logic_vector;
-        in_rdy         : in  std_logic;
-    
-        buf_out        : out std_logic_vector;
-        out_rdy        : out std_logic
-    
-        );
+        clk_in    : in std_logic;
+        reset_in  : in std_logic;
+        enable_in : in std_logic;
+
+        data_in     : in  std_logic_vector;
+        data_in_rdy : in  std_logic;
+
+        data_out     : out std_logic_vector;
+        data_out_rdy : out std_logic;
+        
+        input_full : out std_logic 
+    );
     end component;
 --------------------------------------------------------------------------------
 """
     tm += "    component word_compressor_"+k+"IN_to_64OUT is"
     tm += """
     port(
-        user_clk       : in  std_logic;       
-        reset_in       : in  std_logic;
-    
-        enable_in      : in  std_logic;
-        congestion_out : out std_logic;
-    
-        data_in        : in  std_logic_vector;
-        in_rdy         : in  std_logic;
-    
-        buf_out        : out std_logic_vector;
-        out_rdy        : out std_logic
-    
-        );
+        clk_in    : in std_logic;
+        reset_in  : in std_logic;
+        enable_in : in std_logic;
+
+        data_in     : in  std_logic_vector;
+        data_in_rdy : in  std_logic;
+
+        data_out     : out std_logic_vector;
+        data_out_rdy : out std_logic;
+        
+        input_full : out std_logic 
+    );
     end component;
 --------------------------------------------------------------------------------
     component synenc_reg is
@@ -215,7 +216,8 @@ architecture arch_transceiver_module of transceiver_module is
         in_data  : in  std_logic_vector;
         out_data : out std_logic_vector;
         clk      : in  std_logic;
-        ena      : in  std_logic
+        ena      : in  std_logic;
+        error_inject : in  std_logic_vector(1 downto 0)
     );
     end component;
     
@@ -226,6 +228,7 @@ architecture arch_transceiver_module of transceiver_module is
         clk    : in  std_logic;
         enable : in  std_logic;
         x      : in  std_logic_vector;
+        on_off : in  std_logic;
         E      : out std_logic_vector
     );
     end component;
@@ -488,6 +491,298 @@ architecture arch_transceiver_module of transceiver_module is
     signal BER_circuit_reset_in_i : std_logic;
     signal FBERT_time_reset_in_i  : std_logic;
 
+    -- Reset signals.
+
+    attribute RESET_REG : string;
+
+    signal tx_data_generator_reset_r0 : std_logic;
+    signal tx_word_expander_reset_r0 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r0 : std_logic;
+    signal tx_word_compressor_reset_r0 : std_logic;
+    signal tx_compressor_buffer_reset_r0 : std_logic;
+    signal tx_scrambler_comp_reset_r0 : std_logic;
+    signal tx_TX_syncronizer_reset_r0 : std_logic;
+    signal tx_64b66b_logic_reset_r0 : std_logic;
+    signal rx_block_sync_reset_r0 : std_logic;
+    signal rx_RX_syncronizer_reset_r0 : std_logic;
+    signal rx_descrambler_reset_r0 : std_logic;
+    signal rx_datavalid_delay_reset_r0 : std_logic;
+    signal rx_word_expander_reset_r0 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r0 : std_logic;
+    signal rx_word_compressor_reset_r0 : std_logic;
+    signal rx_BER_calculator_reset_r0 : std_logic;
+    signal rx_FBERT_reset_r0 : std_logic;
+    
+    signal tx_data_generator_reset_r1 : std_logic;
+    signal tx_word_expander_reset_r1 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r1 : std_logic;
+    signal tx_word_compressor_reset_r1 : std_logic;
+    signal tx_compressor_buffer_reset_r1 : std_logic;
+    signal tx_scrambler_comp_reset_r1 : std_logic;
+    signal tx_TX_syncronizer_reset_r1 : std_logic;
+    signal tx_64b66b_logic_reset_r1 : std_logic;
+    signal rx_block_sync_reset_r1 : std_logic;
+    signal rx_RX_syncronizer_reset_r1 : std_logic;
+    signal rx_descrambler_reset_r1 : std_logic;
+    signal rx_datavalid_delay_reset_r1 : std_logic;
+    signal rx_word_expander_reset_r1 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r1 : std_logic;
+    signal rx_word_compressor_reset_r1 : std_logic;
+    signal rx_BER_calculator_reset_r1 : std_logic;
+    signal rx_FBERT_reset_r1 : std_logic;
+    
+    signal tx_data_generator_reset_r2 : std_logic;
+    signal tx_word_expander_reset_r2 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r2 : std_logic;
+    signal tx_word_compressor_reset_r2 : std_logic;
+    signal tx_compressor_buffer_reset_r2 : std_logic;
+    signal tx_scrambler_comp_reset_r2 : std_logic;
+    signal tx_TX_syncronizer_reset_r2 : std_logic;
+    signal tx_64b66b_logic_reset_r2 : std_logic;
+    signal rx_block_sync_reset_r2 : std_logic;
+    signal rx_RX_syncronizer_reset_r2 : std_logic;
+    signal rx_descrambler_reset_r2 : std_logic;
+    signal rx_datavalid_delay_reset_r2 : std_logic;
+    signal rx_word_expander_reset_r2 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r2 : std_logic;
+    signal rx_word_compressor_reset_r2 : std_logic;
+    signal rx_BER_calculator_reset_r2 : std_logic;
+    signal rx_FBERT_reset_r2 : std_logic;
+    
+    signal tx_data_generator_reset_r3 : std_logic;
+    signal tx_word_expander_reset_r3 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r3 : std_logic;
+    signal tx_word_compressor_reset_r3 : std_logic;
+    signal tx_compressor_buffer_reset_r3 : std_logic;
+    signal tx_scrambler_comp_reset_r3 : std_logic;
+    signal tx_TX_syncronizer_reset_r3 : std_logic;
+    signal tx_64b66b_logic_reset_r3 : std_logic;
+    signal rx_block_sync_reset_r3 : std_logic;
+    signal rx_RX_syncronizer_reset_r3 : std_logic;
+    signal rx_descrambler_reset_r3 : std_logic;
+    signal rx_datavalid_delay_reset_r3 : std_logic;
+    signal rx_word_expander_reset_r3 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r3 : std_logic;
+    signal rx_word_compressor_reset_r3 : std_logic;
+    signal rx_BER_calculator_reset_r3 : std_logic;
+    signal rx_FBERT_reset_r3 : std_logic;
+    
+    signal tx_data_generator_reset_r4 : std_logic;
+    signal tx_word_expander_reset_r4 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r4 : std_logic;
+    signal tx_word_compressor_reset_r4 : std_logic;
+    signal tx_compressor_buffer_reset_r4 : std_logic;
+    signal tx_scrambler_comp_reset_r4 : std_logic;
+    signal tx_TX_syncronizer_reset_r4 : std_logic;
+    signal tx_64b66b_logic_reset_r4 : std_logic;
+    signal rx_block_sync_reset_r4 : std_logic;
+    signal rx_RX_syncronizer_reset_r4 : std_logic;
+    signal rx_descrambler_reset_r4 : std_logic;
+    signal rx_datavalid_delay_reset_r4 : std_logic;
+    signal rx_word_expander_reset_r4 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r4 : std_logic;
+    signal rx_word_compressor_reset_r4 : std_logic;
+    signal rx_BER_calculator_reset_r4 : std_logic;
+    signal rx_FBERT_reset_r4 : std_logic;
+    
+    signal tx_data_generator_reset_r5 : std_logic;
+    signal tx_word_expander_reset_r5 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r5 : std_logic;
+    signal tx_word_compressor_reset_r5 : std_logic;
+    signal tx_compressor_buffer_reset_r5 : std_logic;
+    signal tx_scrambler_comp_reset_r5 : std_logic;
+    signal tx_TX_syncronizer_reset_r5 : std_logic;
+    signal tx_64b66b_logic_reset_r5 : std_logic;
+    signal rx_block_sync_reset_r5 : std_logic;
+    signal rx_RX_syncronizer_reset_r5 : std_logic;
+    signal rx_descrambler_reset_r5 : std_logic;
+    signal rx_datavalid_delay_reset_r5 : std_logic;
+    signal rx_word_expander_reset_r5 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r5 : std_logic;
+    signal rx_word_compressor_reset_r5 : std_logic;
+    signal rx_BER_calculator_reset_r5 : std_logic;
+    signal rx_FBERT_reset_r5 : std_logic;
+
+    signal tx_data_generator_reset_r6 : std_logic;
+    signal tx_word_expander_reset_r6 : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_r6 : std_logic;
+    signal tx_word_compressor_reset_r6 : std_logic;
+    signal tx_compressor_buffer_reset_r6 : std_logic;
+    signal tx_scrambler_comp_reset_r6 : std_logic;
+    signal tx_TX_syncronizer_reset_r6 : std_logic;
+    signal tx_64b66b_logic_reset_r6 : std_logic;
+    signal rx_block_sync_reset_r6 : std_logic;
+    signal rx_RX_syncronizer_reset_r6 : std_logic;
+    signal rx_descrambler_reset_r6 : std_logic;
+    signal rx_datavalid_delay_reset_r6 : std_logic;
+    signal rx_word_expander_reset_r6 : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_r6 : std_logic;
+    signal rx_word_compressor_reset_r6 : std_logic;
+    signal rx_BER_calculator_reset_r6 : std_logic;
+    signal rx_FBERT_reset_r6 : std_logic;
+        
+    signal tx_data_generator_reset_i : std_logic;
+    signal tx_word_expander_reset_i : std_logic;
+    signal tx_word_expander_out_rdy_delay_reset_i : std_logic;
+    signal tx_word_compressor_reset_i : std_logic;
+    signal tx_compressor_buffer_reset_i : std_logic;
+    signal tx_scrambler_comp_reset_i : std_logic;
+    signal tx_TX_syncronizer_reset_i : std_logic;
+    signal tx_64b66b_logic_reset_i : std_logic;
+    signal rx_block_sync_reset_i : std_logic;
+    signal rx_RX_syncronizer_reset_i : std_logic;
+    signal rx_descrambler_reset_i : std_logic;
+    signal rx_datavalid_delay_reset_i : std_logic;
+    signal rx_word_expander_reset_i : std_logic;
+    signal rx_word_expander_out_rdy_delay_reset_i : std_logic;
+    signal rx_word_compressor_reset_i : std_logic;
+    signal rx_BER_calculator_reset_i : std_logic;
+    signal rx_FBERT_reset_i : std_logic;
+
+    attribute RESET_REG of tx_data_generator_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r0 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r0 : signal is "TRUE";
+    
+    attribute RESET_REG of tx_data_generator_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r1 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r1 : signal is "TRUE";
+    
+    attribute RESET_REG of tx_data_generator_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r2 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r2 : signal is "TRUE";
+    
+    attribute RESET_REG of tx_data_generator_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r3 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r3 : signal is "TRUE";
+    
+    attribute RESET_REG of tx_data_generator_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r4 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r4 : signal is "TRUE";
+    
+    attribute RESET_REG of tx_data_generator_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r5 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r5 : signal is "TRUE";
+
+    attribute RESET_REG of tx_data_generator_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_r6 : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_r6 : signal is "TRUE";
+        
+    attribute RESET_REG of tx_data_generator_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_word_expander_out_rdy_delay_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_word_compressor_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_compressor_buffer_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_scrambler_comp_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_TX_syncronizer_reset_i : signal is "TRUE";
+    attribute RESET_REG of tx_64b66b_logic_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_block_sync_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_RX_syncronizer_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_descrambler_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_datavalid_delay_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_word_expander_out_rdy_delay_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_word_compressor_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_BER_calculator_reset_i : signal is "TRUE";
+    attribute RESET_REG of rx_FBERT_reset_i : signal is "TRUE";    
+
 --------------------------------------------------------------------------------
     -- Needed signal for the overall transmitting system.
     signal tx_enable_i : std_logic;
@@ -511,14 +806,314 @@ begin
     --FBERT_nr_of_intervals_i <= FBERT_nr_of_intervals;
     FBERT_nr_of_intervals_i <= (others=>'0');
     FBERT_state_out         <= FBERT_state_out_i;
+
+main_reset_process:
+process(tx_clk_i, reset_in)
+begin
+    if reset_in = '0' then
+
+        tx_data_generator_reset_r0 <= '0';
+        tx_word_expander_reset_r0 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r0 <= '0';
+        tx_word_compressor_reset_r0 <= '0';
+        tx_compressor_buffer_reset_r0 <= '0';
+        tx_scrambler_comp_reset_r0 <= '0';
+        tx_TX_syncronizer_reset_r0 <= '0';
+        tx_64b66b_logic_reset_r0 <= '0';
+        rx_block_sync_reset_r0 <= '1';
+        rx_RX_syncronizer_reset_r0 <= '0';
+        rx_descrambler_reset_r0 <= '0';
+        rx_datavalid_delay_reset_r0 <= '0';
+        rx_word_expander_reset_r0 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r0 <= '0';
+        rx_word_compressor_reset_r0 <= '0';
+        rx_BER_calculator_reset_r0 <= '0';
+        rx_FBERT_reset_r0 <= '0';
+        
+        tx_data_generator_reset_r1 <= '0';
+        tx_word_expander_reset_r1 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r1 <= '0';
+        tx_word_compressor_reset_r1 <= '0';
+        tx_compressor_buffer_reset_r1 <= '0';
+        tx_scrambler_comp_reset_r1 <= '0';
+        tx_TX_syncronizer_reset_r1 <= '0';
+        tx_64b66b_logic_reset_r1 <= '0';
+        rx_block_sync_reset_r1 <= '1';
+        rx_RX_syncronizer_reset_r1 <= '0';
+        rx_descrambler_reset_r1 <= '0';
+        rx_datavalid_delay_reset_r1 <= '0';
+        rx_word_expander_reset_r1 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r1 <= '0';
+        rx_word_compressor_reset_r1 <= '0';
+        rx_BER_calculator_reset_r1 <= '0';
+        rx_FBERT_reset_r1 <= '0';
+        
+        tx_data_generator_reset_r2 <= '0';
+        tx_word_expander_reset_r2 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r2 <= '0';
+        tx_word_compressor_reset_r2 <= '0';
+        tx_compressor_buffer_reset_r2 <= '0';
+        tx_scrambler_comp_reset_r2 <= '0';
+        tx_TX_syncronizer_reset_r2 <= '0';
+        tx_64b66b_logic_reset_r2 <= '0';
+        rx_block_sync_reset_r2 <= '1';
+        rx_RX_syncronizer_reset_r2 <= '0';
+        rx_descrambler_reset_r2 <= '0';
+        rx_datavalid_delay_reset_r2 <= '0';
+        rx_word_expander_reset_r2 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r2 <= '0';
+        rx_word_compressor_reset_r2 <= '0';
+        rx_BER_calculator_reset_r2 <= '0';
+        rx_FBERT_reset_r2 <= '0';
+        
+        tx_data_generator_reset_r3 <= '0';
+        tx_word_expander_reset_r3 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r3 <= '0';
+        tx_word_compressor_reset_r3 <= '0';
+        tx_compressor_buffer_reset_r3 <= '0';
+        tx_scrambler_comp_reset_r3 <= '0';
+        tx_TX_syncronizer_reset_r3 <= '0';
+        tx_64b66b_logic_reset_r3 <= '0';
+        rx_block_sync_reset_r3 <= '1';
+        rx_RX_syncronizer_reset_r3 <= '0';
+        rx_descrambler_reset_r3 <= '0';
+        rx_datavalid_delay_reset_r3 <= '0';
+        rx_word_expander_reset_r3 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r3 <= '0';
+        rx_word_compressor_reset_r3 <= '0';
+        rx_BER_calculator_reset_r3 <= '0';
+        rx_FBERT_reset_r3 <= '0';
+        rx_FBERT_reset_r3 <= '0';
+        
+         tx_data_generator_reset_r4 <= '0';
+        tx_word_expander_reset_r4 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r4 <= '0';
+        tx_word_compressor_reset_r4 <= '0';
+        tx_compressor_buffer_reset_r4 <= '0';
+        tx_scrambler_comp_reset_r4 <= '0';
+        tx_TX_syncronizer_reset_r4 <= '0';
+        tx_64b66b_logic_reset_r4 <= '0';
+        rx_block_sync_reset_r4 <= '1';
+        rx_RX_syncronizer_reset_r4 <= '0';
+        rx_descrambler_reset_r4 <= '0';
+        rx_datavalid_delay_reset_r4 <= '0';
+        rx_word_expander_reset_r4 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r4 <= '0';
+        rx_word_compressor_reset_r4 <= '0';
+        rx_BER_calculator_reset_r4 <= '0';
+        rx_FBERT_reset_r4 <= '0';
+        
+        tx_data_generator_reset_r5 <= '0';
+        tx_word_expander_reset_r5 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r5 <= '0';
+        tx_word_compressor_reset_r5 <= '0';
+        tx_compressor_buffer_reset_r5 <= '0';
+        tx_scrambler_comp_reset_r5 <= '0';
+        tx_TX_syncronizer_reset_r5 <= '0';
+        tx_64b66b_logic_reset_r5 <= '0';
+        rx_block_sync_reset_r5 <= '1';
+        rx_RX_syncronizer_reset_r5 <= '0';
+        rx_descrambler_reset_r5 <= '0';
+        rx_datavalid_delay_reset_r5 <= '0';
+        rx_word_expander_reset_r5 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r5 <= '0';
+        rx_word_compressor_reset_r5 <= '0';
+        rx_BER_calculator_reset_r5 <= '0';
+        rx_FBERT_reset_r5 <= '0';
+        
+        tx_data_generator_reset_r6 <= '0';
+        tx_word_expander_reset_r6 <= '0';
+        tx_word_expander_out_rdy_delay_reset_r6 <= '0';
+        tx_word_compressor_reset_r6 <= '0';
+        tx_compressor_buffer_reset_r6 <= '0';
+        tx_scrambler_comp_reset_r6 <= '0';
+        tx_TX_syncronizer_reset_r6 <= '0';
+        tx_64b66b_logic_reset_r6 <= '0';
+        rx_block_sync_reset_r6 <= '1';
+        rx_RX_syncronizer_reset_r6 <= '0';
+        rx_descrambler_reset_r6 <= '0';
+        rx_datavalid_delay_reset_r6 <= '0';
+        rx_word_expander_reset_r6 <= '0';
+        rx_word_expander_out_rdy_delay_reset_r6 <= '0';
+        rx_word_compressor_reset_r6 <= '0';
+        rx_BER_calculator_reset_r6 <= '0';
+        rx_FBERT_reset_r6 <= '0';
+        rx_FBERT_reset_r6 <= '0';       
+                    
+        tx_data_generator_reset_i <= '0';
+        tx_word_expander_reset_i <= '0';
+        tx_word_expander_out_rdy_delay_reset_i <= '0';
+        tx_word_compressor_reset_i <= '0';
+        tx_compressor_buffer_reset_i <= '0';
+        tx_scrambler_comp_reset_i <= '0';
+        tx_TX_syncronizer_reset_i <= '0';
+        tx_64b66b_logic_reset_i <= '0';
+        rx_block_sync_reset_i <= '1';
+        rx_RX_syncronizer_reset_i <= '0';
+        rx_descrambler_reset_i <= '0';
+        rx_datavalid_delay_reset_i <= '0';
+        rx_word_expander_reset_i <= '0';
+        rx_word_expander_out_rdy_delay_reset_i <= '0';
+        rx_word_compressor_reset_i <= '0';
+        rx_BER_calculator_reset_i <= '0';
+        rx_FBERT_reset_i <= '0';          
+          
+    elsif rising_edge(tx_clk_i) then
     
+        tx_data_generator_reset_r0 <= '1';
+        tx_word_expander_reset_r0 <= '1';
+        tx_word_expander_out_rdy_delay_reset_r0 <= '1';
+        tx_word_compressor_reset_r0 <= '1';
+        tx_compressor_buffer_reset_r0 <= '1';
+        tx_scrambler_comp_reset_r0 <= '1';
+        tx_TX_syncronizer_reset_r0 <= '1';
+        tx_64b66b_logic_reset_r0 <= '1';
+        rx_block_sync_reset_r0 <= '0';
+        rx_RX_syncronizer_reset_r0 <= '1';
+        rx_descrambler_reset_r0 <= '1';
+        rx_datavalid_delay_reset_r0 <= '1';
+        rx_word_expander_reset_r0 <= '1';
+        rx_word_expander_out_rdy_delay_reset_r0 <= '1';
+        rx_word_compressor_reset_r0 <= '1';
+        rx_BER_calculator_reset_r0 <= '1';
+        rx_FBERT_reset_r0 <= '1';
+        
+        tx_data_generator_reset_r1 <= tx_data_generator_reset_r0;
+        tx_word_expander_reset_r1 <= tx_word_expander_reset_r0;
+        tx_word_expander_out_rdy_delay_reset_r1 <= tx_word_expander_out_rdy_delay_reset_r0;
+        tx_word_compressor_reset_r1 <= tx_word_compressor_reset_r0;
+        tx_compressor_buffer_reset_r1 <= tx_compressor_buffer_reset_r0;
+        tx_scrambler_comp_reset_r1 <= tx_scrambler_comp_reset_r0;
+        tx_TX_syncronizer_reset_r1 <= tx_TX_syncronizer_reset_r0;
+        tx_64b66b_logic_reset_r1 <= tx_64b66b_logic_reset_r0;
+        rx_block_sync_reset_r1 <= rx_block_sync_reset_r0;
+        rx_RX_syncronizer_reset_r1 <= rx_RX_syncronizer_reset_r0;
+        rx_descrambler_reset_r1 <= rx_descrambler_reset_r0;
+        rx_datavalid_delay_reset_r1 <= rx_datavalid_delay_reset_r0;
+        rx_word_expander_reset_r1 <= rx_word_expander_reset_r0;
+        rx_word_expander_out_rdy_delay_reset_r1 <= rx_word_expander_out_rdy_delay_reset_r0;
+        rx_word_compressor_reset_r1 <= rx_word_compressor_reset_r0;
+        rx_BER_calculator_reset_r1 <= rx_BER_calculator_reset_r0;
+        rx_FBERT_reset_r1 <= rx_FBERT_reset_r0;
+        
+        tx_data_generator_reset_r2 <= tx_data_generator_reset_r1;
+        tx_word_expander_reset_r2 <= tx_word_expander_reset_r1;
+        tx_word_expander_out_rdy_delay_reset_r2 <= tx_word_expander_out_rdy_delay_reset_r1;
+        tx_word_compressor_reset_r2 <= tx_word_compressor_reset_r1;
+        tx_compressor_buffer_reset_r2 <= tx_compressor_buffer_reset_r1;
+        tx_scrambler_comp_reset_r2 <= tx_scrambler_comp_reset_r1;
+        tx_TX_syncronizer_reset_r2 <= tx_TX_syncronizer_reset_r1;
+        tx_64b66b_logic_reset_r2 <= tx_64b66b_logic_reset_r1;
+        rx_block_sync_reset_r2 <= rx_block_sync_reset_r1;
+        rx_RX_syncronizer_reset_r2 <= rx_RX_syncronizer_reset_r1;
+        rx_descrambler_reset_r2 <= rx_descrambler_reset_r1;
+        rx_datavalid_delay_reset_r2 <= rx_datavalid_delay_reset_r1;
+        rx_word_expander_reset_r2 <= rx_word_expander_reset_r1;
+        rx_word_expander_out_rdy_delay_reset_r2 <= rx_word_expander_out_rdy_delay_reset_r1;
+        rx_word_compressor_reset_r2 <= rx_word_compressor_reset_r1;
+        rx_BER_calculator_reset_r2 <= rx_BER_calculator_reset_r1;
+        rx_FBERT_reset_r2 <= rx_FBERT_reset_r1;
+        
+        tx_data_generator_reset_r3 <= tx_data_generator_reset_r2;
+        tx_word_expander_reset_r3 <= tx_word_expander_reset_r2;
+        tx_word_expander_out_rdy_delay_reset_r3 <= tx_word_expander_out_rdy_delay_reset_r2;
+        tx_word_compressor_reset_r3 <= tx_word_compressor_reset_r2;
+        tx_compressor_buffer_reset_r3 <= tx_compressor_buffer_reset_r2;
+        tx_scrambler_comp_reset_r3 <= tx_scrambler_comp_reset_r2;
+        tx_TX_syncronizer_reset_r3 <= tx_TX_syncronizer_reset_r2;
+        tx_64b66b_logic_reset_r3 <= tx_64b66b_logic_reset_r2;
+        rx_block_sync_reset_r3 <= rx_block_sync_reset_r2;
+        rx_RX_syncronizer_reset_r3 <= rx_RX_syncronizer_reset_r2;
+        rx_descrambler_reset_r3 <= rx_descrambler_reset_r2;
+        rx_datavalid_delay_reset_r3 <= rx_datavalid_delay_reset_r2;
+        rx_word_expander_reset_r3 <= rx_word_expander_reset_r2;
+        rx_word_expander_out_rdy_delay_reset_r3 <= rx_word_expander_out_rdy_delay_reset_r2;
+        rx_word_compressor_reset_r3 <= rx_word_compressor_reset_r2;
+        rx_BER_calculator_reset_r3 <= rx_BER_calculator_reset_r2;
+        rx_FBERT_reset_r3 <= rx_FBERT_reset_r2;
+        
+        tx_data_generator_reset_r4 <= tx_data_generator_reset_r3;
+        tx_word_expander_reset_r4 <= tx_word_expander_reset_r3;
+        tx_word_expander_out_rdy_delay_reset_r4 <= tx_word_expander_out_rdy_delay_reset_r3;
+        tx_word_compressor_reset_r4 <= tx_word_compressor_reset_r3;
+        tx_compressor_buffer_reset_r4 <= tx_compressor_buffer_reset_r3;
+        tx_scrambler_comp_reset_r4 <= tx_scrambler_comp_reset_r3;
+        tx_TX_syncronizer_reset_r4 <= tx_TX_syncronizer_reset_r3;
+        tx_64b66b_logic_reset_r4 <= tx_64b66b_logic_reset_r3;
+        rx_block_sync_reset_r4 <= rx_block_sync_reset_r3;
+        rx_RX_syncronizer_reset_r4 <= rx_RX_syncronizer_reset_r3;
+        rx_descrambler_reset_r4 <= rx_descrambler_reset_r3;
+        rx_datavalid_delay_reset_r4 <= rx_datavalid_delay_reset_r3;
+        rx_word_expander_reset_r4 <= rx_word_expander_reset_r3;
+        rx_word_expander_out_rdy_delay_reset_r4 <= rx_word_expander_out_rdy_delay_reset_r3;
+        rx_word_compressor_reset_r4 <= rx_word_compressor_reset_r3;
+        rx_BER_calculator_reset_r4 <= rx_BER_calculator_reset_r3;
+        rx_FBERT_reset_r4 <= rx_FBERT_reset_r3;
+        
+        tx_data_generator_reset_r5 <= tx_data_generator_reset_r4;
+        tx_word_expander_reset_r5 <= tx_word_expander_reset_r4;
+        tx_word_expander_out_rdy_delay_reset_r5 <= tx_word_expander_out_rdy_delay_reset_r4;
+        tx_word_compressor_reset_r5 <= tx_word_compressor_reset_r4;
+        tx_compressor_buffer_reset_r5 <= tx_compressor_buffer_reset_r4;
+        tx_scrambler_comp_reset_r5 <= tx_scrambler_comp_reset_r4;
+        tx_TX_syncronizer_reset_r5 <= tx_TX_syncronizer_reset_r4;
+        tx_64b66b_logic_reset_r5 <= tx_64b66b_logic_reset_r4;
+        rx_block_sync_reset_r5 <= rx_block_sync_reset_r4;
+        rx_RX_syncronizer_reset_r5 <= rx_RX_syncronizer_reset_r4;
+        rx_descrambler_reset_r5 <= rx_descrambler_reset_r4;
+        rx_datavalid_delay_reset_r5 <= rx_datavalid_delay_reset_r4;
+        rx_word_expander_reset_r5 <= rx_word_expander_reset_r4;
+        rx_word_expander_out_rdy_delay_reset_r5 <= rx_word_expander_out_rdy_delay_reset_r4;
+        rx_word_compressor_reset_r5 <= rx_word_compressor_reset_r4;
+        rx_BER_calculator_reset_r5 <= rx_BER_calculator_reset_r4;
+        rx_FBERT_reset_r5 <= rx_FBERT_reset_r4;
+        
+        tx_data_generator_reset_r6 <= tx_data_generator_reset_r5;
+        tx_word_expander_reset_r6 <= tx_word_expander_reset_r5;
+        tx_word_expander_out_rdy_delay_reset_r6 <= tx_word_expander_out_rdy_delay_reset_r5;
+        tx_word_compressor_reset_r6 <= tx_word_compressor_reset_r5;
+        tx_compressor_buffer_reset_r6 <= tx_compressor_buffer_reset_r5;
+        tx_scrambler_comp_reset_r6 <= tx_scrambler_comp_reset_r5;
+        tx_TX_syncronizer_reset_r6 <= tx_TX_syncronizer_reset_r5;
+        tx_64b66b_logic_reset_r6 <= tx_64b66b_logic_reset_r5;
+        rx_block_sync_reset_r6 <= rx_block_sync_reset_r5;
+        rx_RX_syncronizer_reset_r6 <= rx_RX_syncronizer_reset_r5;
+        rx_descrambler_reset_r6 <= rx_descrambler_reset_r5;
+        rx_datavalid_delay_reset_r6 <= rx_datavalid_delay_reset_r5;
+        rx_word_expander_reset_r6 <= rx_word_expander_reset_r5;
+        rx_word_expander_out_rdy_delay_reset_r6 <= rx_word_expander_out_rdy_delay_reset_r5;
+        rx_word_compressor_reset_r6 <= rx_word_compressor_reset_r5;
+        rx_BER_calculator_reset_r6 <= rx_BER_calculator_reset_r5;
+        rx_FBERT_reset_r6 <= rx_FBERT_reset_r5;
+
+        
+        tx_data_generator_reset_i <= tx_data_generator_reset_r6;
+        tx_word_expander_reset_i <= tx_word_expander_reset_r6;
+        tx_word_expander_out_rdy_delay_reset_i <= tx_word_expander_out_rdy_delay_reset_r6;
+        tx_word_compressor_reset_i <= tx_word_compressor_reset_r6;
+        tx_compressor_buffer_reset_i <= tx_compressor_buffer_reset_r6;
+        tx_scrambler_comp_reset_i <= tx_scrambler_comp_reset_r6;
+        tx_TX_syncronizer_reset_i <= tx_TX_syncronizer_reset_r6;
+        tx_64b66b_logic_reset_i <= tx_64b66b_logic_reset_r6;
+        rx_block_sync_reset_i <= rx_block_sync_reset_r6;
+        rx_RX_syncronizer_reset_i <= rx_RX_syncronizer_reset_r6;
+        rx_descrambler_reset_i <= rx_descrambler_reset_r6;
+        rx_datavalid_delay_reset_i <= rx_datavalid_delay_reset_r6;
+        rx_word_expander_reset_i <= rx_word_expander_reset_r6;
+        rx_word_expander_out_rdy_delay_reset_i <= rx_word_expander_out_rdy_delay_reset_r6;
+        rx_word_compressor_reset_i <= rx_word_compressor_reset_r6;
+        rx_BER_calculator_reset_i <= rx_BER_calculator_reset_r6;
+        rx_FBERT_reset_i <= rx_FBERT_reset_r6;
+        
+    end if;
+end process;    
 
 -- Here starts (TX), the transmitting chain of components.    
-
-    -- Enable signal to enable/disable the pipe.
-    
         --tx_enable_i <= (not tx_word_compressor_congestion_i) and TX_logic_tx_valid_out_i;
-        tx_enable_i <= (not tx_word_compressor_congestion_i) and TX_logic_tx_valid_out_i and (not tx_compressor_buffer_congestion_i);
+        --tx_enable_i <= (not tx_word_compressor_congestion_i) and TX_logic_tx_valid_out_i and (not tx_compressor_buffer_congestion_i);
+        
+        --new for today:
+        tx_enable_i <= TX_logic_tx_valid_out_i and (not tx_compressor_buffer_congestion_i) and not (tx_word_expander_out_rdy_r0 and tx_word_compressor_congestion_i);
 
 -- TX DATA GENERATOR.
 tx_data_generator:
@@ -529,7 +1124,7 @@ component data_generator
     )
     port map(
         tx_clk     => tx_clk_i,
-        reset_in   => reset_in_i,
+        reset_in   => tx_data_generator_reset_i,
 
         enable_in  => tx_enable_i,
         enable_out => tx_data_gen_enable_out_i,
@@ -547,7 +1142,7 @@ tx_word_expander:
     )
     port map(
         user_clk  => tx_clk_i,
-        reset_in  => reset_in_i,
+        reset_in  => tx_word_expander_reset_i,
         enable_in => tx_enable_i,
         in_rdy    => tx_data_gen_enable_out_i,
         data_in   => tx_data_gen_data_out_i,
@@ -559,16 +1154,22 @@ tx_word_expander:
 -- This process delays the signaling of "data_in_available" to the TX Compressor,
 --   so it will sync with the encoder output.
 tx_word_expander_out_rdy_delay:
-process(tx_clk_i, reset_in_i, tx_word_compressor_congestion_i, TX_logic_tx_valid_out_i, tx_compressor_buffer_congestion_i)
+process(tx_clk_i, tx_word_expander_out_rdy_delay_reset_i, tx_word_compressor_congestion_i, TX_logic_tx_valid_out_i, tx_compressor_buffer_congestion_i)
 begin
-    if reset_in_i = '0' then
+    if tx_word_expander_out_rdy_delay_reset_i = '0' then
         tx_word_expander_out_rdy_r0 <= '0';
     --elsif rising_edge(tx_clk_i) and tx_word_compressor_congestion_i = '0' and TX_logic_tx_valid_out_i = '1' then
-    elsif rising_edge(tx_clk_i) and tx_word_compressor_congestion_i = '0' and TX_logic_tx_valid_out_i = '1' and tx_compressor_buffer_congestion_i = '0' then
-        if tx_word_expander_out_rdy_i = '1' then
-            tx_word_expander_out_rdy_r0 <= '1';
-        else
-            tx_word_expander_out_rdy_r0 <= '0';
+    --elsif rising_edge(tx_clk_i) and tx_word_compressor_congestion_i = '0' and TX_logic_tx_valid_out_i = '1' and tx_compressor_buffer_congestion_i = '0' then
+    
+    -- TODAY
+    elsif rising_edge(tx_clk_i) and TX_logic_tx_valid_out_i = '1' and tx_compressor_buffer_congestion_i = '0' then
+    
+        if not (tx_word_expander_out_rdy_r0 = '1' and tx_word_compressor_congestion_i = '1') then
+            if tx_word_expander_out_rdy_i = '1' then
+                tx_word_expander_out_rdy_r0 <= '1';
+            else
+                tx_word_expander_out_rdy_r0 <= '0';
+            end if;
         end if;
     end if;
 end process;
@@ -581,9 +1182,10 @@ component synenc_reg
         in_data  => tx_word_expander_buf_out_i,
         out_data => tx_synenc_reg_out_data_i,
         clk      => tx_clk_i,
-        ena      => tx_enable_i
+        ena      => tx_enable_i,
+        error_inject => FBERT_error_injection
     );
-    
+
 
 -- TX WORD COMPRESSOR.
 tx_word_compressor:
@@ -591,17 +1193,17 @@ tx_word_compressor:
     tm += "word_compressor_"+n+"IN_to_64OUT"
     tm += """
     port map(
-        user_clk          => tx_clk_i,
-        reset_in          => reset_in_i,
-        
-        enable_in         => tx_word_compressor_enable_in_i,--TX_logic_tx_valid_out_i,
-        congestion_out    => tx_word_compressor_congestion_i,
+        clk_in       => tx_clk_i,
+        reset_in     => tx_word_compressor_reset_i,
+        enable_in    => tx_word_compressor_enable_in_i,
 
-        data_in           => tx_synenc_reg_out_data_i,
-        in_rdy            => tx_word_expander_out_rdy_r0,
+        data_in      => tx_synenc_reg_out_data_i,
+        data_in_rdy  => tx_word_expander_out_rdy_r0,
 
-        buf_out           => tx_word_compressor_buf_out_i,
-        out_rdy           => tx_word_compressor_out_rdy_i
+        data_out     => tx_word_compressor_buf_out_i,
+        data_out_rdy => tx_word_compressor_out_rdy_i,
+
+        input_full   => tx_word_compressor_congestion_i
     );
     
     --tx_word_compressor_enable_in_i <= TX_logic_tx_valid_out_i;
@@ -616,7 +1218,7 @@ component compressor_buffer
     )
     port map(
         user_clk      => tx_clk_i,
-        reset_in      => reset_in_i,
+        reset_in      => tx_compressor_buffer_reset_i,
         enable_in     => tx_compressor_buffer_enable_in_i,
         
         tx_sync_rdy   => tx_sync_synq_rdy_z_i,
@@ -641,7 +1243,7 @@ component gtwizard_0_SCRAMBLER_alt
         SCRAMBLED_DATA_OUT  => tx_scrambler_data_out,
         DATA_VALID_IN       => tx_scrambler_data_valid_in_i,
         USER_CLK            => tx_clk_i,
-        SYSTEM_RESET        => reset_in_i,
+        SYSTEM_RESET        => tx_scrambler_comp_reset_i,
         ENABLE              => tx_scrambler_enable_i
     );
 
@@ -657,7 +1259,7 @@ component TX_syncronizer
     )
     port map(
         tx_clk       => tx_clk_i,
-        reset_in     => reset_in_i,
+        reset_in     => tx_TX_syncronizer_reset_i,
         enable_in    => tx_sync_enable_in_i,
         
         synq_rdy     => tx_sync_synq_rdy_i,
@@ -675,7 +1277,7 @@ tx_64b66b_logic:
 component exdes_TX_logic
     port map(
         tx_clk         => tx_clk_i,
-        reset_in       => reset_in_i,
+        reset_in       => tx_64b66b_logic_reset_i,
         tx_valid_out   => TX_logic_tx_valid_out_i,
         txsequence_out => TX_logic_txsequence_out_i,
         txheader_out   => TX_logic_txheader_out_i
@@ -716,7 +1318,7 @@ component gtwizard_0_BLOCK_SYNC_SM_alt
     
         -- System Interface
         USER_CLK           => rx_clk_i,
-        SYSTEM_RESET       => not_reset_in_i
+        SYSTEM_RESET       => rx_block_sync_reset_i
     );
     
     --RXHEADER_IN_i <= std_logic_vector('0' & RXHEADER);
@@ -731,7 +1333,7 @@ component RX_syncronizer
     )
     port map(
         rx_clk        => rx_clk_i,
-        reset_in      => reset_in,
+        reset_in      => rx_RX_syncronizer_reset_i,
         block_lock    => rx_blocksync_out_i,
         
         rx_data_in    => RXDATA_i,
@@ -759,8 +1361,7 @@ component gtwizard_0_DESCRAMBLER_alt
 
     rx_data_valid_in_i <= rx_sync_reset_out_i and RXVALID;
     
-    --rx_descrambler_system_reset_i <= reset_in;
-    rx_descrambler_system_reset_i <= reset_in and rx_blocksync_out_i;
+    rx_descrambler_system_reset_i <= rx_descrambler_reset_i and rx_blocksync_out_i;
         
 
     -- We use this to simulate rxvalid, letting the buffer assert it.
@@ -770,9 +1371,9 @@ component gtwizard_0_DESCRAMBLER_alt
 -- DESCRAMBLER OUTPUT_RDY DELAY        
 -- This process delays the signaling of "rx_data_valid_in_i" to components subsequent of the descrambler.
 rx_datavalid_delay:
-process(rx_clk_i, reset_in)
+process(rx_clk_i, rx_datavalid_delay_reset_i)
 begin
-    if reset_in = '0' then
+    if rx_datavalid_delay_reset_i = '0' then
         rxdata_valid_r <= '0';
         rxdata_valid_r2 <= '0';
     elsif rising_edge(rx_clk_i) then
@@ -809,15 +1410,14 @@ rx_word_expander:
         out_rdy   => rx_word_expander_out_rdy_i
     );
     
-    --rx_word_expander_reset_in_i <= reset_in;
-    rx_word_expander_reset_in_i <= reset_in and rx_blocksync_out_i;
+    rx_word_expander_reset_in_i <= rx_word_expander_reset_i and rx_blocksync_out_i;
     
 --  DECODER OUTPUT_RDY DELAY
 -- This process delays the signaling of "data_in_available" to the RX Compressor.
 rx_word_expander_out_rdy_delay:
-process(rx_clk_i, reset_in)
+process(rx_clk_i, rx_word_expander_out_rdy_delay_reset_i)
 begin
-    if reset_in = '0' then
+    if rx_word_expander_out_rdy_delay_reset_i = '0' then
         rx_word_expander_out_rdy_r0 <= '0';
         rx_word_expander_out_rdy_r1 <= '0';
         rx_word_expander_out_rdy_r2 <= '0';
@@ -842,6 +1442,7 @@ component bch_peterson
         clk    => rx_clk_i,
         enable => rx_word_expander_out_rdy_i,
         x      => rx_word_expander_buf_out_i,
+        on_off => FBERT_FEC_on_off,
         E      => rx_bch_peterson_E_out
     );
 
@@ -852,21 +1453,20 @@ rx_word_compressor:
     tm += "word_compressor_"+str(k)+"IN_to_64OUT"
     tm += """
     port map(
-        user_clk       => rx_clk_i,
-        reset_in       => rx_word_expander_reset_in_i,
-        
-        enable_in      => tied_to_vcc_i,
-        congestion_out => rx_word_compressor_congestion_i,
+        clk_in       => rx_clk_i,
+        reset_in     => rx_word_expander_reset_in_i,
+        enable_in    => tied_to_vcc_i,
 
-        data_in        => rx_bch_peterson_E_out,
-        in_rdy         => rx_word_expander_out_rdy_r2,
+        data_in      => rx_bch_peterson_E_out,
+        data_in_rdy  => rx_word_expander_out_rdy_r2,
 
-        buf_out        => rx_word_compressor_buf_out_i,
-        out_rdy        => rx_word_compressor_out_rdy_i
+        data_out     => rx_word_compressor_buf_out_i,
+        data_out_rdy => rx_word_compressor_out_rdy_i,
+
+        input_full   => rx_word_compressor_congestion_i
     );
 
-    --rx_word_expander_reset_in_i <= reset_in;
-    rx_word_expander_reset_in_i <= reset_in and rx_blocksync_out_i;
+    rx_word_expander_reset_in_i <= rx_word_compressor_reset_i and rx_blocksync_out_i;
 
 
 
@@ -889,14 +1489,13 @@ component BER_calculator
         errors_out       => BER_circuit_errors_i
     );
     
-    BER_circuit_reset_in_i <= reset_in;
-    --BER_circuit_reset_in_i <= reset_in and rx_blocksync_out_i;
+    BER_circuit_reset_in_i <= rx_BER_calculator_reset_i;
+
     
 rx_FBERT:
 component FBERT
     generic map(
         IN_WIDTH   => DATA_WIDTH,
-        --START_WORD => x"00000000000000fb"
         START_WORD => x"00000000000000fb"
     )
     port map(
@@ -921,8 +1520,7 @@ component FBERT
         state_out       => FBERT_state_out_i
     );
     
-    --FBERT_time_reset_in_i <= reset_in;
-    FBERT_time_reset_in_i <= reset_in and rx_blocksync_out_i;
+    FBERT_time_reset_in_i <= rx_FBERT_reset_i and rx_blocksync_out_i;
 
 end arch_transceiver_module;"""
 

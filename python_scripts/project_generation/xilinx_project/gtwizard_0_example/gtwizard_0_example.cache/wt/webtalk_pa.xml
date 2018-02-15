@@ -3,7 +3,7 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
-<application name="pa" timeStamp="Wed Jul 26 21:36:24 2017">
+<application name="pa" timeStamp="Tue Aug 15 12:50:53 2017">
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="f601f45c12e64d958d64a96ffb3239c4" type="ProjectID"/>
 <property name="ProjectIteration" value="61" type="ProjectIteration"/>
@@ -21,7 +21,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="AutoConnectTarget" value="9" type="JavaHandler"/>
 <property name="CheckTiming" value="4" type="JavaHandler"/>
 <property name="CloseDesign" value="4" type="JavaHandler"/>
-<property name="CloseProject" value="4" type="JavaHandler"/>
+<property name="CloseProject" value="5" type="JavaHandler"/>
 <property name="ConfigureBitstream" value="1" type="JavaHandler"/>
 <property name="CoreView" value="1" type="JavaHandler"/>
 <property name="CustomizeCore" value="1" type="JavaHandler"/>
@@ -59,7 +59,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="SimulationRun" value="16" type="JavaHandler"/>
 <property name="SimulationRunForTime" value="134" type="JavaHandler"/>
 <property name="ToggleSelectAreaMode" value="2" type="JavaHandler"/>
-<property name="ToolsSettings" value="5" type="JavaHandler"/>
+<property name="ToolsSettings" value="6" type="JavaHandler"/>
 <property name="UnhighlightSelection" value="2" type="JavaHandler"/>
 <property name="UnmarkSelection" value="2" type="JavaHandler"/>
 <property name="UpgradeIP" value="1" type="JavaHandler"/>
@@ -77,14 +77,14 @@ This means code written to parse this file will need to be revisited each subseq
 <item name="Gui Resources Info">
 <property name="AbstractSelectableTablePanel_EXPORT_TO_SPREADSHEET" value="2" type="GuiResourceData"/>
 <property name="BaseDialog_APPLY" value="1" type="GuiResourceData"/>
-<property name="BaseDialog_CANCEL" value="55" type="GuiResourceData"/>
-<property name="BaseDialog_OK" value="129" type="GuiResourceData"/>
+<property name="BaseDialog_CANCEL" value="56" type="GuiResourceData"/>
+<property name="BaseDialog_OK" value="131" type="GuiResourceData"/>
 <property name="BaseDialog_YES" value="2" type="GuiResourceData"/>
 <property name="CheckTimingResultTreeTablePanel_CHECK_TIMING_RESULT_TREE_TABLE" value="25" type="GuiResourceData"/>
 <property name="CheckTimingSectionPanel_CHECK_TIMING_SELECTION_TABLE" value="11" type="GuiResourceData"/>
 <property name="ClockSummaryTreeTablePanel_CLOCK_SUMMARY_TREE_TABLE" value="2" type="GuiResourceData"/>
 <property name="ClosePlanner_NO" value="2" type="GuiResourceData"/>
-<property name="CmdMsgDialog_OK" value="16" type="GuiResourceData"/>
+<property name="CmdMsgDialog_OK" value="17" type="GuiResourceData"/>
 <property name="ConfigureBitstreamDialog_TOC_LIST" value="6" type="GuiResourceData"/>
 <property name="CoreTreeTablePanel_CORE_TREE_TABLE" value="42" type="GuiResourceData"/>
 <property name="CreateSrcFileDialog_FILE_NAME" value="2" type="GuiResourceData"/>
@@ -95,7 +95,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="ExportToSpreadsheetDialog_VISIBLE_ROWS" value="1" type="GuiResourceData"/>
 <property name="FileSetPanel_FILE_SET_PANEL_TREE" value="222" type="GuiResourceData"/>
 <property name="FloatingTopDialog_IGNORE_AND_CONTINUE_WITH_INVALID_TOP" value="1" type="GuiResourceData"/>
-<property name="FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE" value="345" type="GuiResourceData"/>
+<property name="FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE" value="348" type="GuiResourceData"/>
 <property name="FlowNavigatorTreePanel_RESET_SYNTHESIS_RUN" value="3" type="GuiResourceData"/>
 <property name="GraphicalView_ZOOM_FIT" value="27" type="GuiResourceData"/>
 <property name="GraphicalView_ZOOM_IN" value="213" type="GuiResourceData"/>
@@ -115,10 +115,10 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="LaunchPanel_LAUNCH_DIRECTORY" value="1" type="GuiResourceData"/>
 <property name="MainMenuMgr_DESIGN_HUBS" value="1" type="GuiResourceData"/>
 <property name="MainMenuMgr_EXPORT" value="1" type="GuiResourceData"/>
-<property name="MainMenuMgr_FILE" value="20" type="GuiResourceData"/>
+<property name="MainMenuMgr_FILE" value="22" type="GuiResourceData"/>
 <property name="MainMenuMgr_HELP" value="4" type="GuiResourceData"/>
 <property name="MainMenuMgr_OPEN_RECENT_FILE" value="2" type="GuiResourceData"/>
-<property name="MainMenuMgr_OPEN_RECENT_PROJECT" value="8" type="GuiResourceData"/>
+<property name="MainMenuMgr_OPEN_RECENT_PROJECT" value="9" type="GuiResourceData"/>
 <property name="MainMenuMgr_REPORT" value="3" type="GuiResourceData"/>
 <property name="MainMenuMgr_TOOLS" value="4" type="GuiResourceData"/>
 <property name="MainMenuMgr_VIEW" value="2" type="GuiResourceData"/>
@@ -135,9 +135,9 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="NetlistTreeView_NETLIST_TREE" value="8" type="GuiResourceData"/>
 <property name="PACommandNames_AUTO_CONNECT_TARGET" value="7" type="GuiResourceData"/>
 <property name="PACommandNames_AUTO_UPDATE_HIER" value="2" type="GuiResourceData"/>
-<property name="PACommandNames_BITSTREAM_SETTINGS" value="1" type="GuiResourceData"/>
+<property name="PACommandNames_BITSTREAM_SETTINGS" value="2" type="GuiResourceData"/>
 <property name="PACommandNames_CLOSE_HARDWARE_DESIGN" value="3" type="GuiResourceData"/>
-<property name="PACommandNames_CLOSE_PROJECT" value="1" type="GuiResourceData"/>
+<property name="PACommandNames_CLOSE_PROJECT" value="2" type="GuiResourceData"/>
 <property name="PACommandNames_GOTO_IMPLEMENTED_DESIGN" value="1" type="GuiResourceData"/>
 <property name="PACommandNames_NEW_PROJECT" value="1" type="GuiResourceData"/>
 <property name="PACommandNames_OPEN_PROJECT" value="3" type="GuiResourceData"/>
@@ -250,9 +250,9 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="XPowerSettingsDialog_SAVE_THESE_SETTINGS_AND_RUN" value="2" type="GuiResourceData"/>
 </item>
 <item name="Other">
-<property name="GuiMode" value="35" type="GuiMode"/>
+<property name="GuiMode" value="47" type="GuiMode"/>
 <property name="BatchMode" value="0" type="BatchMode"/>
-<property name="TclMode" value="28" type="TclMode"/>
+<property name="TclMode" value="37" type="TclMode"/>
 </item>
 </section>
 </application>

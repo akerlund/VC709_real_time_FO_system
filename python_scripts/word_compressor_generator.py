@@ -1,3 +1,10 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+""" This is the script which generates the enormous compressors.
+    So large they won't fit the FPGA, except the small ones.
+"""
+
 #IN_WIDTH = 239
 OUT_WIDTH = 113
 

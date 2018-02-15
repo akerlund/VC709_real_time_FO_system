@@ -1,8 +1,20 @@
 # Generates all outputs of a Word Expander to be used
 # with a testbench.
 
-import sys, math
+import sys, math, os
 
+def ensure_dir(file_path):
+
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+        return False
+    else:
+        return True
+
+
+
+DIRECTORY = "./word_expander_packages"
+ensure_dir(DIRECTORY)
 
 INPUT_WIDTH  = 64
 #INPUT_WIDTH  = 512
@@ -43,7 +55,7 @@ for OUTPUT_WIDTH in OUTPUT_WIDTHS:
                                 0x00000000000000000000000000000]
 
     if INPUT_WIDTH == 64:
-        select = 1
+        select = 0
         if select == 0:
             DATA_GENERATOR_HEX =   [0x00000000000000fb,
                                     0x0706050403020100,
@@ -187,6 +199,6 @@ for OUTPUT_WIDTH in OUTPUT_WIDTHS:
 
     output_ROM.append("end " + PACKAGE_NAME + ";")
 
-    with open(FILENAME,'w') as file:
+    with open(DIRECTORY+"/"+FILENAME,'w') as file:
         for i in range(len(output_ROM)):
             file.write(output_ROM[i])

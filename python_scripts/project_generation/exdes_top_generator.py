@@ -1635,14 +1635,7 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
     signal TX_start    : std_logic;
     signal TX_busy     : std_logic;
     signal RX_complete : std_logic;
-    
-    -- State machine for the UART.
-    type TX_states is ( IDLE, BYTE_COUNTING, READ_ALL_A0h, READ_ALL_A2h,
-                        READ_RTS, UART_BUSY, WAIT_FOR_UART_BUSY, WAIT_FOR_UART_NOT_BUSY,--READ_DIGITAL, 
-                        READ_FRAME_CHECK, WAITING );
-    signal TX_curr_state : TX_states := IDLE;
-    signal TX_next_state : TX_states := IDLE;
-    
+        
     
     -- I2C for configuring the Si5324.
     component VC709_I2C_inits is
@@ -1729,9 +1722,10 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
         FBERT_run_rdy   : out std_logic;
         FBERT_BER_out   : out std_logic_vector(31 downto 0);
         
-        FBERT_time_interval   : in std_logic_vector(31 downto 0);
-        
-        FBERT_state_out       : out std_logic_vector(2 downto 0)
+        FBERT_time_interval   : in std_logic_vector(31 downto 0);        
+        FBERT_state_out       : out std_logic_vector(2 downto 0);
+        FBERT_error_injection : in  std_logic_vector(1 downto 0);
+        FBERT_FEC_on_off      : in  std_logic
     );
     end component;
 
@@ -1753,10 +1747,13 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
     signal tm0_FBERT_run_rdy_i : std_logic;
     signal tm0_FBERT_BER_out_i : std_logic_vector(31 downto 0);
     
-    signal tm0_FBERT_time_interval_i   : std_logic_vector(31 downto 0);
-    
-    signal tm0_FBERT_state_out_i       : std_logic_vector(2 downto 0);
-    
+    signal tm0_FBERT_time_interval_i : std_logic_vector(31 downto 0);    
+    signal tm0_FBERT_state_out_i     : std_logic_vector(2 downto 0);
+
+    signal tm0_FBERT_error_injection_i : std_logic_vector(1 downto 0);
+    signal tm0_FBERT_FEC_on_off_i      : std_logic;
+
+
     -- Transceiver Module 1.
     signal tm1_reset_i          : std_logic;
     
@@ -1769,15 +1766,68 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
     signal tm1_RXHEADER_i      : std_logic_vector(1 downto 0);
     signal tm1_RXHEADERVALID_i : std_logic;
     signal tm1_RXDATA_i        : std_logic_vector((DATA_WIDTH-1) downto 0);
-    signal tm1_RXGEARBOXSLIP_i : std_logic; 
+    signal tm1_RXGEARBOXSLIP_i : std_logic;
     signal tm1_RX_REF_CNT_i    : std_logic_vector(7 downto 0);
     
     signal tm1_FBERT_run_rdy_i : std_logic;
     signal tm1_FBERT_BER_out_i : std_logic_vector(31 downto 0);
     
-    signal tm1_FBERT_time_interval_i   : std_logic_vector(31 downto 0);
+    signal tm1_FBERT_time_interval_i : std_logic_vector(31 downto 0);    
+    signal tm1_FBERT_state_out_i     : std_logic_vector(2 downto 0);
 
-    signal tm1_FBERT_state_out_i       : std_logic_vector(2 downto 0);
+    signal tm1_FBERT_error_injection_i : std_logic_vector(1 downto 0);
+    signal tm1_FBERT_FEC_on_off_i      : std_logic;
+
+
+    -- Transceiver Module 2.
+    signal tm2_reset_i          : std_logic;
+    
+    signal tm2_TXVALID_i  : std_logic;
+    signal tm2_TXSEQ_i    : std_logic_vector(6 downto 0);
+    signal tm2_TXHEADER_i : std_logic_vector(1 downto 0);
+    signal tm2_TXDATA_i   : std_logic_vector((DATA_WIDTH-1) downto 0);    
+
+    signal tm2_RXVALID_i       : std_logic;
+    signal tm2_RXHEADER_i      : std_logic_vector(1 downto 0);
+    signal tm2_RXHEADERVALID_i : std_logic;
+    signal tm2_RXDATA_i        : std_logic_vector((DATA_WIDTH-1) downto 0);
+    signal tm2_RXGEARBOXSLIP_i : std_logic;
+    signal tm2_RX_REF_CNT_i    : std_logic_vector(7 downto 0);
+    
+    signal tm2_FBERT_run_rdy_i : std_logic;
+    signal tm2_FBERT_BER_out_i : std_logic_vector(31 downto 0);
+    
+    signal tm2_FBERT_time_interval_i : std_logic_vector(31 downto 0);    
+    signal tm2_FBERT_state_out_i     : std_logic_vector(2 downto 0);
+
+    signal tm2_FBERT_error_injection_i : std_logic_vector(1 downto 0);
+    signal tm2_FBERT_FEC_on_off_i      : std_logic;
+
+
+    -- Transceiver Module 3.
+
+    signal tm3_reset_i          : std_logic;
+    
+    signal tm3_TXVALID_i  : std_logic;
+    signal tm3_TXSEQ_i    : std_logic_vector(6 downto 0);
+    signal tm3_TXHEADER_i : std_logic_vector(1 downto 0);
+    signal tm3_TXDATA_i   : std_logic_vector((DATA_WIDTH-1) downto 0);    
+
+    signal tm3_RXVALID_i       : std_logic;
+    signal tm3_RXHEADER_i      : std_logic_vector(1 downto 0);
+    signal tm3_RXHEADERVALID_i : std_logic;
+    signal tm3_RXDATA_i        : std_logic_vector((DATA_WIDTH-1) downto 0);
+    signal tm3_RXGEARBOXSLIP_i : std_logic;
+    signal tm3_RX_REF_CNT_i    : std_logic_vector(7 downto 0);
+    
+    signal tm3_FBERT_run_rdy_i : std_logic;
+    signal tm3_FBERT_BER_out_i : std_logic_vector(31 downto 0);
+    
+    signal tm3_FBERT_time_interval_i : std_logic_vector(31 downto 0);    
+    signal tm3_FBERT_state_out_i     : std_logic_vector(2 downto 0);
+
+    signal tm3_FBERT_error_injection_i : std_logic_vector(1 downto 0);
+    signal tm3_FBERT_FEC_on_off_i      : std_logic;
 
 
     -- Others
@@ -1793,18 +1843,17 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
 
 
     type SERIAL_STATES is (
-        SI5324_RESET_1, SI5324_RESET_2, SI5324_WRITE, SI5324_FINISH, BULLSHIT_1, BULLSHIT_2,
+        SI5324_RESET_1, SI5324_RESET_2, SI5324_WRITE, SI5324_FINISH,
         
         UART_BUSY, WAIT_FOR_UART_BUSY, WAIT_FOR_UART_NOT_BUSY, I2C_RX_TO_UART_TX,
         
-        READ_ALL_A0h, READ_ALL_A2h_1, READ_ALL_A2h_2, READ_SFPs_1, READ_SFPs_2, SFP_SELECT_1, SFP_SELECT_2,
+        READ_ALL_A0h, READ_ALL_A2h_1, READ_ALL_A2h_2, READ_SFPs_1, READ_SFPs_2,
         
         SEND_BER_1, SEND_BER_2, SEND_BER_3,
         SEND_STATUS_1, SEND_STATUS_2,
         SEND_HEADER_1, SEND_HEADER_2,
         
-        WAITING);       
-        
+        WAITING);
         
     signal CURR_SERIAL_STATE : SERIAL_STATES; 
     signal NEXT_SERIAL_STATE : SERIAL_STATES;
@@ -1815,17 +1864,19 @@ attribute ASYNC_REG of gt3_rx_reset_i2     : signal is "TRUE";
         signal SI5324_counter  : natural := 0;
         signal RX_byte_counter : natural := 0;
         signal SFP_select_cnt  : natural := 0;
-        signal fs_counter      : natural := 0;
+        signal wait_counter      : natural := 0;
         signal BER_counter     : natural := 0;
         signal READ_ALL_A2h_1_counter : natural := 0;
+        signal serial_status_LED_counter     : natural := 0;
+        signal FBERT_BER_int : std_logic_vector(31 downto 0);
 
 --**************************** Main Body of Code *******************************
 begin
 
 
-serial_process:
 -- Resets the Si5324 with its reset-pin according to the datasheet and the writes
 -- values saved in ROM to the EEPROM registers with I2C. 
+serial_process:
 process(drpclk_in_i)--, tm0_reset_i)
 begin
 --    if tm0_reset_i = '0' then
@@ -1835,7 +1886,9 @@ begin
 
         case CURR_SERIAL_STATE is
 
-            -- First the reset-pin is set low for its minimum time.
+            -- It is specified in the Si5324 datasheet that the minimum time
+            -- the reset-pin should be set low is 1us. This state holds the
+            -- reset pin for 1us and then changes the current state.
             when SI5324_RESET_1 =>            
                 
                 SI5324_RST_LS <= '0';  -- Reset is active low.
@@ -1851,8 +1904,10 @@ begin
                 SI5324_complete    <= '0';
 
 
-            
-            when SI5324_RESET_2 => -- Now the reset pin is asserted and we wait the maximum time until 'access ready'.
+            -- This state asserts the reset pin and uses a counter to switch to
+            -- the next state after 10ms, as that is the time specified in the datasheet
+            -- it is needed to wait for the Si5324 to be 'access ready'.
+            when SI5324_RESET_2 => 
             
                 SI5324_RST_LS <= '1';
                 
@@ -1864,7 +1919,10 @@ begin
                 end if;
 
 
-            -- Signaling the IIC component to do the write procedure of all the registers.
+            -- In this state the the I2C component's 'I2C_device_sel' port is set high
+            -- which means the I2C FSM will write its ROM with register values to the Si5324.
+            -- The I2C component will do so if the 'I2C_start' is asserted, so this state
+            -- does that too. 
             when SI5324_WRITE =>
                 SI5324_RST_LS     <= '1';
                 I2C_start         <= '1';
@@ -1877,20 +1935,28 @@ begin
                 I2C_SFP_REG_sel <= '0';
 
 
-            -- Waiting for the write to complete.
+            -- This state signals the 'I2C_start' port low again and waits for the
+            -- I2C circuit to finish the configuration of the Si5324. Because of the
+            -- start-up delay of the I2C circuit, both the 'I2C_idle_state' output from 
+            -- the I2C circuit has to be high as well as a counter has to be high enough.
+            -- The 'I2C_idle_state' signal will not be asserted when this state is first
+            -- reached, so the counter makes sure the I2C circuit gets enough clock cycles
+            -- to deassert the 'I2C_idle_state' port.
+
+            -- Before we read the registers of the SFPs, we will send out a header which
+            -- indicates that the following data are from the registers of the SFPs.
+            -- This state changes sets the register 'serial_header' to 0xA1.
             when SI5324_FINISH =>
+
                 SI5324_RST_LS <= '1';
                 I2C_start     <= '0';
 
                 -- Adding an approximated delay of writing to the registers.
-                                    --if SI5324_counter = 100000000 then -- Is this enough? idk
                 if I2C_idle_state = '1' and SI5324_counter >= 15 then
+            
                     SI5324_complete    <= '1';
                     CURR_SERIAL_STATE  <= SEND_HEADER_1;
-                    
                     NEXT_SERIAL_STATE  <= READ_ALL_A0h;
-                    --NEXT_SERIAL_STATE  <= BULLSHIT_1;
-                    
                     serial_header      <= x"A1"; 
                     SI5324_counter     <= 0;
                 else
@@ -1898,25 +1964,29 @@ begin
                 end if;
 
 
+            -- Sending headers before any data helps application running on the receiver to
+            -- decide on what data is being received. The preceding state sets the 'serial_header'
+            -- register which is passed on here to the 'TX_byte' register. The first state
+            -- starts the UART by setting the 'TX_start' high and the seconds sets it low again
+            -- and switches over to the UART states.
             when SEND_HEADER_1 =>
             
                 TX_byte  <= serial_header;
                 TX_start <= '1';
                 CURR_SERIAL_STATE <= SEND_HEADER_2;
-                
-            
             
             when SEND_HEADER_2 =>
 
                 TX_start <= '0';
-                
-                --if TX_busy = '0' then
-                    CURR_SERIAL_STATE <= WAIT_FOR_UART_BUSY;
-                --end if;            
+                CURR_SERIAL_STATE <= WAIT_FOR_UART_BUSY;
                 
                 
-                
-            -- Sets the address interval of the interesting registers at address A0h.
+            -- This state sets up the I2C component for reading the registers of
+            -- interest at address A0h of the SFP modules. Because some of the
+            -- register does not contain any valuable information, the I2C component's
+            -- (input) index ports are set to zero and 95, which makes up a total
+            -- of 96 bytes to read per SFP. The register 'RX_byte_counter' is set
+            -- 96*4 which is used by the 'I2C_RX_TO_UART_TX' state.
             when READ_ALL_A0h =>
 
                 I2C_index_start <= std_logic_vector(to_unsigned(0,8));
@@ -1930,7 +2000,10 @@ begin
                 NEXT_SERIAL_STATE <= READ_ALL_A2h_1;
 
 
-
+            -- This state first have a delay so it is certain that
+            -- the I2C and UART are ready. After the delay we the process of sending
+            -- out a header is repeated, this time signaling that the values of the
+            -- other registers at address A2 is following.
             when READ_ALL_A2h_1 =>
                 
                 if READ_ALL_A2h_1_counter = 1000000 then
@@ -1941,7 +2014,8 @@ begin
                     READ_ALL_A2h_1_counter <= READ_ALL_A2h_1_counter + 1;
                 end if;            
                                    
-            -- Sets the address interval of the interesting registers at address A2h. 
+            -- This state has the same functionality as the 'READ_ALL_A0h'.
+            -- But here the index is set from 0 to 117.
             when READ_ALL_A2h_2 =>
                             
                 I2C_index_start <= std_logic_vector(to_unsigned(0,8));
@@ -1954,7 +2028,13 @@ begin
                 NEXT_SERIAL_STATE <= READ_SFPs_1;
 
 
-            -- 
+            -- This state decreases the value of register 'RX_byte_counter'
+            -- everytime the I2C circuit signals out that a read is done.
+            -- Every time a read is done the read byte is forwarded to the
+            -- UART circuit which is started at the same time.
+            -- When the byte counter reaches zero the current state changed to
+            -- the UART state which will eventually change to the state
+            -- saved in the 'NEXT_STATE' register.
             when I2C_RX_TO_UART_TX =>
             
                 I2C_start <= '0';
@@ -1973,38 +2053,38 @@ begin
 
 
 
-            -- 
+            -- In this state we are just waiting for the UART to signal
+            -- that is is busy, and when so the current state changes to
+            -- the WAIT_FOR_UART_NOT_BUSY state.
             when WAIT_FOR_UART_BUSY =>
                 if TX_busy = '1' then
                     CURR_SERIAL_STATE <= WAIT_FOR_UART_NOT_BUSY;
                 end if;
 
 
-            -- 
+            -- As soon as the UART is not busy anymore the current state
+            -- changes to the state saved in the 'NEXT_SERIAL_STATE' register.
             when WAIT_FOR_UART_NOT_BUSY =>
                 if TX_busy = '0' then
                     CURR_SERIAL_STATE <= NEXT_SERIAL_STATE;
                 end if;
  
  
-
+            -- This state starts the repetition of sending a header which
+            -- this time is for signaling that the following data are
+            -- real-time values from the SFPs, i.e., voltage, power and current.
             when READ_SFPs_1 =>
                 
---                    if SFP_select_cnt = 0 then
-                    serial_header <= x"A3";
---                    elsif SFP_select_cnt = 1 then
---                        serial_header <= x"A4";
---                    elsif SFP_select_cnt = 2 then
---                        serial_header <= x"A5";
---                    elsif SFP_select_cnt = 3 then
---                        serial_header <= x"A6";
---                    end if;
-         
+                serial_header <= x"A3";
                 CURR_SERIAL_STATE <= SEND_HEADER_1;
                 NEXT_SERIAL_STATE <= READ_SFPs_2;
                 
  
-            -- This state only reads the RTS data.
+            -- This state is reached after the header has been sent.
+            -- The I2C circuit's index is set from 96 to 105 which are the
+            -- registers that contains the real-time data. From every
+            -- SFP, ten bytes will be read and therefore the 'RX_byte_counter'
+            -- register is set to 40.
             when READ_SFPs_2 =>
                                             
                 I2C_index_start <= std_logic_vector(to_unsigned(96,8));
@@ -2014,80 +2094,79 @@ begin
                 
                 RX_byte_counter <= 10*4;
                 CURR_SERIAL_STATE <= I2C_RX_TO_UART_TX;
-                --NEXT_SERIAL_STATE <= SFP_SELECT_1;      
                 NEXT_SERIAL_STATE <= SEND_BER_1;                               
 
+            -- This state repeats the sending of a header process.
+            -- It will send out the current BER value from the BERT circuit.
+            -- If more than one Transciever Module is used in the system, here
+            -- it is possible to decide which output should be sent.
+            when SEND_BER_1 =>
 
-            --  The IIC component actually read all four SFPs,
-            --  this state only rotates through the readings.
---                when SFP_SELECT_1 =>
-            
---                    if SFP_select_cnt = 4-1 then
---                        SFP_select_cnt    <= 0;
---                       -- TX_start          <= '0';
---                        CURR_SERIAL_STATE <= SEND_BER_1;
-                    
---                    else
---                        --TX_start          <= '1';
---                        CURR_SERIAL_STATE <= READ_SFPs_1;
---                        --NEXT_SERIAL_STATE <= SFP_SELECT_1;
---                        SFP_select_cnt <= SFP_select_cnt + 1;
---                    end if;               
-
-
---                when SFP_SELECT_2 =>
-            
---                    TX_start <= '0';
+                serial_header <= x"A7";
                 
---                    if TX_busy = '0' then
---                        CURR_SERIAL_STATE <= WAIT_FOR_UART_BUSY;
---                    end if;
-                
-                
-                
-        when SEND_BER_1 =>
+                CURR_SERIAL_STATE <= SEND_HEADER_1;
+                NEXT_SERIAL_STATE <= SEND_BER_2;
+                TX_start          <= '1';
+           
+"""
+
+    if not nr_of_tranceivers == 1:
+        body += """
+                if GPIO_DIP(4 downto 3) = "00" then
+                    FBERT_BER_int <= tm0_FBERT_BER_out_i;
+                elsif GPIO_DIP(4 downto 3) = "01" then
+                    FBERT_BER_int <= tm1_FBERT_BER_out_i;
+                elsif GPIO_DIP(4 downto 3) = "10" then
+                    FBERT_BER_int <= tm2_FBERT_BER_out_i;
+                else
+                    FBERT_BER_int <= tm3_FBERT_BER_out_i;
+                end if;
+"""
+    else:
+        body += """
+
+
+            FBERT_BER_int <= tm0_FBERT_BER_out_i;
+
+"""
+
+   
+    body += """
 
         
---                if BER_counter = 0 and TX_busy = '0' then
---                    CURR_SERIAL_STATE <= WAIT_FOR_UART_BUSY;
---                end if;
-
-            serial_header <= x"A7";
-            
-            CURR_SERIAL_STATE <= SEND_HEADER_1;
-            NEXT_SERIAL_STATE <= SEND_BER_2;
-            
-            TX_start <= '1';
-        
-        
-        
-        
-        when SEND_BER_2 =>
+            -- The header for the data that will be sent has been sent before this state.
+            -- The output of the BERT is a 32-bit value so four bytes will now have to be sent.
+            -- This state uses the register 'BER_counter' to decide which byte of the BERT
+            -- output to send. When the last byte has been forwarded, the 'NEXT_SERIAL_STATE'
+            -- register will be set to 'SEND_STATUS_1', else it will return to itself after
+            -- SEND_BER_3.
+            when SEND_BER_2 =>
                  
                 TX_start <= '1';
                 if BER_counter = 0 then
                     BER_counter <= BER_counter + 1;
-                    TX_byte  <= tm0_FBERT_BER_out_i(7 downto 0);
+                    TX_byte  <= FBERT_BER_int(7 downto 0);
                     CURR_SERIAL_STATE <= SEND_BER_3;
                     NEXT_SERIAL_STATE <= SEND_BER_2;
                 elsif BER_counter = 1 then
                     BER_counter <= BER_counter + 1;
-                    TX_byte  <= tm0_FBERT_BER_out_i(15 downto 8);
+                    TX_byte  <= FBERT_BER_int(15 downto 8);
                     CURR_SERIAL_STATE <= SEND_BER_3;
                     NEXT_SERIAL_STATE <= SEND_BER_2;
                 elsif BER_counter = 2 then
                     BER_counter <= BER_counter + 1;
-                    TX_byte  <= tm0_FBERT_BER_out_i(23 downto 16);
+                    TX_byte  <= FBERT_BER_int(23 downto 16);
                     CURR_SERIAL_STATE <= SEND_BER_3;
                     NEXT_SERIAL_STATE <= SEND_BER_2;
                 elsif BER_counter = 3 then
                     BER_counter <= 0;
-                    TX_byte  <= tm0_FBERT_BER_out_i(31 downto 24);
+                    TX_byte  <= FBERT_BER_int(31 downto 24);
                     CURR_SERIAL_STATE <= SEND_BER_3;
                     NEXT_SERIAL_STATE <= SEND_STATUS_1;
                 end if;                   
                
-                            
+        -- This state sets 'TX_start' to low and changed to the
+        -- WAIT_FOR_UART_BUSY state.
         when SEND_BER_3 =>
             
             TX_start <= '0';       
@@ -2095,23 +2174,75 @@ begin
             
             
             
-            
+        -- In this state the 'TX_byte' register to the UART is
+        -- filled with different inormation about the system.
+        -- The succeeding state will just set the 'TX_start' signal
+        -- back to low and the next state will be 'WAITING'.
         when SEND_STATUS_1 =>
         
             TX_start <= '1';
-            
-            TX_byte(0) <= SFP_LOS_0;--'0';--SFP_LOS(0);
+            CURR_SERIAL_STATE <= SEND_STATUS_2;
+            NEXT_SERIAL_STATE <= WAITING;
+
+"""
+
+    if not nr_of_tranceivers == 1:
+        body += """
+
+            if GPIO_DIP(4 downto 3) = "00" then
+                TX_byte(0) <= SFP_LOS_0;
+                TX_byte(1) <= tm0_RXHEADER_i(0);
+                TX_byte(2) <= tm0_RXHEADER_i(1);
+                TX_byte(3) <= tm0_RXVALID_i;
+                TX_byte(4) <= tm0_FBERT_state_out_i(0);
+                TX_byte(5) <= tm0_FBERT_state_out_i(1);
+                TX_byte(6) <= tm0_FBERT_state_out_i(2);
+                TX_byte(7) <= GPIO_DIP(7);
+            elsif GPIO_DIP(4 downto 3) = "01" then
+                TX_byte(0) <= '0';                      -- ALWAYS ZERO!
+                TX_byte(1) <= tm1_RXHEADER_i(0);
+                TX_byte(2) <= tm1_RXHEADER_i(1);
+                TX_byte(3) <= tm1_RXVALID_i;
+                TX_byte(4) <= tm1_FBERT_state_out_i(0);
+                TX_byte(5) <= tm1_FBERT_state_out_i(1);
+                TX_byte(6) <= tm1_FBERT_state_out_i(2);
+                TX_byte(7) <= GPIO_DIP(7);
+            elsif GPIO_DIP(4 downto 3) = "10" then
+                TX_byte(0) <= '0';                      -- ALWAYS ZERO!
+                TX_byte(1) <= tm2_RXHEADER_i(0);
+                TX_byte(2) <= tm2_RXHEADER_i(1);
+                TX_byte(3) <= tm2_RXVALID_i;
+                TX_byte(4) <= tm2_FBERT_state_out_i(0);
+                TX_byte(5) <= tm2_FBERT_state_out_i(1);
+                TX_byte(6) <= tm2_FBERT_state_out_i(2);
+                TX_byte(7) <= GPIO_DIP(7);
+            else
+                TX_byte(0) <= '0';                      -- ALWAYS ZERO!
+                TX_byte(1) <= tm3_RXHEADER_i(0);
+                TX_byte(2) <= tm3_RXHEADER_i(1);
+                TX_byte(3) <= tm3_RXVALID_i;
+                TX_byte(4) <= tm3_FBERT_state_out_i(0);
+                TX_byte(5) <= tm3_FBERT_state_out_i(1);
+                TX_byte(6) <= tm3_FBERT_state_out_i(2);
+                TX_byte(7) <= GPIO_DIP(7);
+            end if;
+
+"""
+    else:
+        body += """
+
+            TX_byte(0) <= SFP_LOS_0;
             TX_byte(1) <= tm0_RXHEADER_i(0);
             TX_byte(2) <= tm0_RXHEADER_i(1);
             TX_byte(3) <= tm0_RXVALID_i;
             TX_byte(4) <= tm0_FBERT_state_out_i(0);
             TX_byte(5) <= tm0_FBERT_state_out_i(1);
             TX_byte(6) <= tm0_FBERT_state_out_i(2);
-            TX_byte(7) <= '0';
+            TX_byte(7) <= GPIO_DIP(7);
             
-            CURR_SERIAL_STATE <= SEND_STATUS_2;
-            NEXT_SERIAL_STATE <= WAITING;
-            
+"""
+
+    body += """
                             
         when SEND_STATUS_2 =>
             
@@ -2119,14 +2250,24 @@ begin
             CURR_SERIAL_STATE <= WAIT_FOR_UART_BUSY;
             
                      
-            
+        -- This state will change the current state when its counter has reached
+        -- 4000000 which takes 20 ms. Now including the time it takes to pass
+        -- through the other states, this will yield a period time of approximately 50Hz.
+        -- While in this state, another timer is used to toggle an LED for
+        -- indicating to a user that the process is running.
         when WAITING =>
         
-            if fs_counter = 4000000 then
-                fs_counter <= 0;
+            if wait_counter = 4000000 then
+                wait_counter <= 0;
                 CURR_SERIAL_STATE <= READ_SFPs_1;
+                if serial_status_LED_counter /= 25 then
+                    serial_status_LED_counter <= serial_status_LED_counter + 1;
+                else
+                    serial_status_LED_counter <= 0;
+                    LED(0) <= not LED(0);
+                end if;
             else
-                fs_counter <= fs_counter + 1;
+                wait_counter <= wait_counter + 1;
             end if;
                             
                             
@@ -2207,8 +2348,10 @@ begin
         case STARTUP_STATE is
             when ON_STARTUP =>
             
-                tm1_reset_i <= '0';
                 tm0_reset_i <= '0';
+                tm1_reset_i <= '0';
+                tm2_reset_i <= '0';
+                tm3_reset_i <= '0';
                 
                 startup_reset_done <= '0';
                 STARTUP_STATE <= CONF_SI5324;
@@ -2222,8 +2365,10 @@ begin
                 
             when STARTED =>
             
-                tm1_reset_i <= gt1_txfsmresetdone_r2;
                 tm0_reset_i <= gt0_txfsmresetdone_r2;
+                tm1_reset_i <= gt1_txfsmresetdone_r2;
+                tm2_reset_i <= gt2_txfsmresetdone_r2;
+                tm3_reset_i <= gt3_txfsmresetdone_r2;
                 
                 startup_reset_done <= '1';
                 STARTUP_STATE <= STARTED;
@@ -2269,13 +2414,22 @@ port map(
     FBERT_run_rdy   => tm0_FBERT_run_rdy_i,
     FBERT_BER_out   => tm0_FBERT_BER_out_i,
     
-    FBERT_time_interval   => tm0_FBERT_time_interval_i,
-    
-    FBERT_state_out       => tm0_FBERT_state_out_i
+    FBERT_time_interval   => tm0_FBERT_time_interval_i,    
+    FBERT_state_out       => tm0_FBERT_state_out_i,
+
+    FBERT_error_injection => tm0_FBERT_error_injection_i,
+    FBERT_FEC_on_off => tm0_FBERT_FEC_on_off_i
 );
 
-    tm0_FBERT_time_interval_i   <= x"0000FFFF";
+    tm0_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    --tm0_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
 
+    tm0_FBERT_error_injection_i <= GPIO_DIP(6 downto 5);
+    tm0_FBERT_FEC_on_off_i <= GPIO_DIP(7);
+
+"""
+    if nr_of_tranceivers == 1:
+        body += """
 
 --tm1:
 --component transceiver_module
@@ -2310,134 +2464,364 @@ port map(
 --    FBERT_run_rdy   => tm1_FBERT_run_rdy_i,
 --    FBERT_BER_out   => tm1_FBERT_BER_out_i,
     
---    FBERT_time_interval => tm1_FBERT_time_interval_i,
-    
---    FBERT_state_out     => tm1_FBERT_state_out_i
+--    FBERT_time_interval => tm1_FBERT_time_interval_i,    
+--    FBERT_state_out     => tm1_FBERT_state_out_i,
+
+--    FBERT_error_injection => tm1_FBERT_error_injection_i,
+--    FBERT_FEC_on_off => tm1_FBERT_FEC_on_off_i
 --);
 
+    --tm1_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    ----tm1_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    --tm1_FBERT_error_injection_i <= "00";
+    --tm1_FBERT_FEC_on_off_i <= '1';
 
-    tm1_FBERT_time_interval_i   <= x"0000FFFF";
-    
-    
-LED_process_0:
---process(GPIO_DIP,gt0_error_count_i,drp_clk_toggler,reset_btn,STARTUP_STATE,tm0_FBERT_run_rdy_i,tm1_FBERT_run_rdy_i,tm0_FBERT_BER_out_i,tm1_FBERT_BER_out_i,tm0_FBERT_run_rdy_i,tm1_FBERT_run_rdy_i,gt0_txfsmresetdone_r2,gt1_txfsmresetdone_r2,gt2_error_count_i,gt3_error_count_i,tm0_FBERT_state_out_i,tm1_FBERT_state_out_i,tm0_RXVALID_i,tm0_RXHEADER_i,tm0_RXHEADERVALID_i,tm0_RXGEARBOXSLIP_i,tm1_RXVALID_i,tm1_RXHEADER_i,tm1_RXHEADERVALID_i,tm1_RXGEARBOXSLIP_i,tm0_RX_REF_CNT_i,tm1_RX_REF_CNT_i)
---process(drpclk_in_i)
-process(gt0_rxusrclk2_i)
-begin
 
---    if rising_edge(gt0_rxusrclk2_i) then
+--tm2:
+--component transceiver_module
+--generic map (
+--    DATA_WIDTH => DATA_WIDTH,
+--    N_WIDTH    => N_WIDTH,
+--    K_WIDTH    => K_WIDTH
+--)
+--port map(
+--    -- CLOCKS.
+--    tx_clk          => gt2_txusrclk2_i,
+--    rx_clk          => gt2_rxusrclk2_i,
     
-    case GPIO_DIP is
+--    -- RESETS.
+--    reset_in        => tm2_reset_i,
     
---        -- CHECK CLOCKS.
---        when "00000000" =>
---            LED(0) <= drp_clk_toggler;
---            LED(1) <= reset_btn;
---            if STARTUP_STATE = STARTED then
---                LED(2) <= '1';
---            else
---                LED(2) <= '0';
+--    -- TX PORTS.
+--    TXVALID         => tm2_TXVALID_i,
+--    TXSEQ           => tm2_TXSEQ_i,
+--    TXHEADER        => tm2_TXHEADER_i,
+--    TXDATA          => tm2_TXDATA_i,
+    
+--    -- RX PORTS.
+--    RXVALID         => tm2_RXVALID_i,
+--    RXHEADER        => tm2_RXHEADER_i,
+--    RXHEADERVALID   => tm2_RXHEADERVALID_i,
+--    RXDATA          => tm2_RXDATA_i,
+--    RXGEARBOXSLIP   => tm2_RXGEARBOXSLIP_i,
+--    RX_REF_CNT      => tm2_RX_REF_CNT_i,
+            
+--    -- FBERT.
+--    FBERT_run_rdy   => tm2_FBERT_run_rdy_i,
+--    FBERT_BER_out   => tm2_FBERT_BER_out_i,
+    
+--    FBERT_time_interval => tm2_FBERT_time_interval_i,    
+--    FBERT_state_out     => tm2_FBERT_state_out_i,
+
+--    FBERT_error_injection => tm2_FBERT_error_injection_i,
+--    FBERT_FEC_on_off => tm2_FBERT_FEC_on_off_i
+--);
+
+    --tm2_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    ----tm2_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    --tm2_FBERT_error_injection_i <= "00";
+    --tm2_FBERT_FEC_on_off_i <= '1';
+
+
+--tm3:
+--component transceiver_module
+--generic map (
+--    DATA_WIDTH => DATA_WIDTH,
+--    N_WIDTH    => N_WIDTH,
+--    K_WIDTH    => K_WIDTH
+--)
+--port map(
+--    -- CLOCKS.
+--    tx_clk          => gt3_txusrclk2_i,
+--    rx_clk          => gt3_rxusrclk2_i,
+    
+--    -- RESETS.
+--    reset_in        => tm3_reset_i,
+    
+--    -- TX PORTS.
+--    TXVALID         => tm3_TXVALID_i,
+--    TXSEQ           => tm3_TXSEQ_i,
+--    TXHEADER        => tm3_TXHEADER_i,
+--    TXDATA          => tm3_TXDATA_i,
+    
+--    -- RX PORTS.
+--    RXVALID         => tm3_RXVALID_i,
+--    RXHEADER        => tm3_RXHEADER_i,
+--    RXHEADERVALID   => tm3_RXHEADERVALID_i,
+--    RXDATA          => tm3_RXDATA_i,
+--    RXGEARBOXSLIP   => tm3_RXGEARBOXSLIP_i,
+--    RX_REF_CNT      => tm3_RX_REF_CNT_i,
+            
+--    -- FBERT.
+--    FBERT_run_rdy   => tm3_FBERT_run_rdy_i,
+--    FBERT_BER_out   => tm3_FBERT_BER_out_i,
+    
+--    FBERT_time_interval => tm3_FBERT_time_interval_i,    
+--    FBERT_state_out     => tm3_FBERT_state_out_i,
+
+--    FBERT_error_injection => tm3_FBERT_error_injection_i,
+--    FBERT_FEC_on_off => tm3_FBERT_FEC_on_off_i
+--);
+
+    --tm3_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    ----tm3_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    --tm3_FBERT_error_injection_i <= "00";
+    --tm3_FBERT_FEC_on_off_i <= '1';
+"""
+    else:
+
+        body += """
+
+tm1:
+component transceiver_module
+generic map (
+    DATA_WIDTH => DATA_WIDTH,
+    N_WIDTH    => N_WIDTH,
+    K_WIDTH    => K_WIDTH
+)
+port map(
+    -- CLOCKS.
+    tx_clk          => gt1_txusrclk2_i,
+    rx_clk          => gt1_rxusrclk2_i,
+  
+    -- RESETS.
+    reset_in        => tm1_reset_i,
+  
+    -- TX PORTS.
+    TXVALID         => tm1_TXVALID_i,
+    TXSEQ           => tm1_TXSEQ_i,
+    TXHEADER        => tm1_TXHEADER_i,
+    TXDATA          => tm1_TXDATA_i,
+  
+    -- RX PORTS.
+    RXVALID         => tm1_RXVALID_i,
+    RXHEADER        => tm1_RXHEADER_i,
+    RXHEADERVALID   => tm1_RXHEADERVALID_i,
+    RXDATA          => tm1_RXDATA_i,
+    RXGEARBOXSLIP   => tm1_RXGEARBOXSLIP_i,
+    RX_REF_CNT      => tm1_RX_REF_CNT_i,
+          
+    -- FBERT.
+    FBERT_run_rdy   => tm1_FBERT_run_rdy_i,
+    FBERT_BER_out   => tm1_FBERT_BER_out_i,
+  
+    FBERT_time_interval => tm1_FBERT_time_interval_i,    
+    FBERT_state_out     => tm1_FBERT_state_out_i,
+    FBERT_error_injection => tm1_FBERT_error_injection_i,
+    FBERT_FEC_on_off => tm1_FBERT_FEC_on_off_i
+);
+   tm1_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    --tm1_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    tm1_FBERT_error_injection_i <= GPIO_DIP(6 downto 5);
+    tm1_FBERT_FEC_on_off_i <= GPIO_DIP(7);
+tm2:
+component transceiver_module
+generic map (
+    DATA_WIDTH => DATA_WIDTH,
+    N_WIDTH    => N_WIDTH,
+    K_WIDTH    => K_WIDTH
+)
+port map(
+    -- CLOCKS.
+    tx_clk          => gt2_txusrclk2_i,
+    rx_clk          => gt2_rxusrclk2_i,
+  
+    -- RESETS.
+    reset_in        => tm2_reset_i,
+  
+    -- TX PORTS.
+    TXVALID         => tm2_TXVALID_i,
+    TXSEQ           => tm2_TXSEQ_i,
+    TXHEADER        => tm2_TXHEADER_i,
+    TXDATA          => tm2_TXDATA_i,
+  
+    -- RX PORTS.
+    RXVALID         => tm2_RXVALID_i,
+    RXHEADER        => tm2_RXHEADER_i,
+    RXHEADERVALID   => tm2_RXHEADERVALID_i,
+    RXDATA          => tm2_RXDATA_i,
+    RXGEARBOXSLIP   => tm2_RXGEARBOXSLIP_i,
+    RX_REF_CNT      => tm2_RX_REF_CNT_i,
+          
+    -- FBERT.
+    FBERT_run_rdy   => tm2_FBERT_run_rdy_i,
+    FBERT_BER_out   => tm2_FBERT_BER_out_i,
+  
+    FBERT_time_interval => tm2_FBERT_time_interval_i,    
+    FBERT_state_out     => tm2_FBERT_state_out_i,
+    FBERT_error_injection => tm2_FBERT_error_injection_i,
+    FBERT_FEC_on_off => tm2_FBERT_FEC_on_off_i
+);
+   tm2_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    --tm2_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    tm2_FBERT_error_injection_i <= GPIO_DIP(6 downto 5);
+    tm2_FBERT_FEC_on_off_i <= GPIO_DIP(7);
+tm3:
+component transceiver_module
+generic map (
+    DATA_WIDTH => DATA_WIDTH,
+    N_WIDTH    => N_WIDTH,
+    K_WIDTH    => K_WIDTH
+)
+port map(
+    -- CLOCKS.
+    tx_clk          => gt3_txusrclk2_i,
+    rx_clk          => gt3_rxusrclk2_i,
+  
+    -- RESETS.
+    reset_in        => tm3_reset_i,
+  
+    -- TX PORTS.
+    TXVALID         => tm3_TXVALID_i,
+    TXSEQ           => tm3_TXSEQ_i,
+    TXHEADER        => tm3_TXHEADER_i,
+    TXDATA          => tm3_TXDATA_i,
+  
+    -- RX PORTS.
+    RXVALID         => tm3_RXVALID_i,
+    RXHEADER        => tm3_RXHEADER_i,
+    RXHEADERVALID   => tm3_RXHEADERVALID_i,
+    RXDATA          => tm3_RXDATA_i,
+    RXGEARBOXSLIP   => tm3_RXGEARBOXSLIP_i,
+    RX_REF_CNT      => tm3_RX_REF_CNT_i,
+          
+    -- FBERT.
+    FBERT_run_rdy   => tm3_FBERT_run_rdy_i,
+    FBERT_BER_out   => tm3_FBERT_BER_out_i,
+  
+    FBERT_time_interval => tm3_FBERT_time_interval_i,    
+    FBERT_state_out     => tm3_FBERT_state_out_i,
+    FBERT_error_injection => tm3_FBERT_error_injection_i,
+    FBERT_FEC_on_off => tm3_FBERT_FEC_on_off_i
+);
+   tm3_FBERT_time_interval_i   <= x"05F5E100"; -- 100000000 = 0.5s
+    --tm3_FBERT_time_interval_i   <= x"0BEBC200"; -- 200000000 = 1.0s
+    tm3_FBERT_error_injection_i <= GPIO_DIP(6 downto 5);
+    tm3_FBERT_FEC_on_off_i <= GPIO_DIP(7);
+"""
+
+    body += """
+    
+    
+--LED_process_0:
+----process(GPIO_DIP,gt0_error_count_i,drp_clk_toggler,reset_btn,STARTUP_STATE,tm0_FBERT_run_rdy_i,tm1_FBERT_run_rdy_i,tm0_FBERT_BER_out_i,tm1_FBERT_BER_out_i,tm0_FBERT_run_rdy_i,tm1_FBERT_run_rdy_i,gt0_txfsmresetdone_r2,gt1_txfsmresetdone_r2,gt2_error_count_i,gt3_error_count_i,tm0_FBERT_state_out_i,tm1_FBERT_state_out_i,tm0_RXVALID_i,tm0_RXHEADER_i,tm0_RXHEADERVALID_i,tm0_RXGEARBOXSLIP_i,tm1_RXVALID_i,tm1_RXHEADER_i,tm1_RXHEADERVALID_i,tm1_RXGEARBOXSLIP_i,tm0_RX_REF_CNT_i,tm1_RX_REF_CNT_i)
+----process(drpclk_in_i)
+--process(gt0_rxusrclk2_i)
+--begin
+--
+----    if rising_edge(gt0_rxusrclk2_i) then
+    --
+--    case GPIO_DIP is
+    --
+----        -- CHECK CLOCKS.
+----        when "00000000" =>
+----            LED(0) <= drp_clk_toggler;
+----            LED(1) <= reset_btn;
+----            if STARTUP_STATE = STARTED then
+----                LED(2) <= '1';
+----            else
+----                LED(2) <= '0';
+----            end if;
+----            LED(7 downto 3) <= (others=>'0');
+            --
+--        when "00000001" =>
+--            if tm0_FBERT_run_rdy_i = '1' then
+--                LED <= tm0_FBERT_BER_out_i(7 downto 0);
 --            end if;
---            LED(7 downto 3) <= (others=>'0');
-            
-        when "00000001" =>
-            if tm0_FBERT_run_rdy_i = '1' then
-                LED <= tm0_FBERT_BER_out_i(7 downto 0);
-            end if;
-            
---        when "00000010" =>
---            if tm1_FBERT_run_rdy_i = '1' then
---                LED <= tm1_FBERT_BER_out_i(7 downto 0);
---            end if;
-            
-        when "00000011" =>
-            LED(0) <= tm0_FBERT_run_rdy_i;
-            --LED(1) <= tm1_FBERT_run_rdy_i;
-            --LED(2) <= gt0_txfsmresetdone_r2;
-            --LED(3) <= gt1_txfsmresetdone_r2;
-            LED(7 downto 1) <= (others=>'0');
-        
---        when "00000100" =>
---            LED <= gt2_error_count_i;
-                        
---        when "00000101" =>
---            LED <= gt3_error_count_i;
-            
-        when "00000110" =>
-            case tm0_FBERT_state_out_i is
-                when "000" =>
-                    LED <= "00000001";-- 
-                when "001" =>
-                    LED <= "00000010";-- IDLE
-                when "010" =>
-                    LED <= "00000100";-- SYNC_RX
-                when "011" =>
-                    LED <= "00001000";-- RX_SYNCED
-                when "100" =>
-                    LED <= "00010000";-- SYNC_BER_CALCULATOR
-                when "101" =>
-                    LED <= "00100000";-- FBERT_RUN
-                when "110" =>
-                    LED <= "01000000";-- FBERT_END
-                when "111" =>
-                    LED <= "10000000";-- 
-                when others =>
-                    LED <= "00000000";--
-            end case;
-            
---        when "00000111" =>
-        
---            case tm1_FBERT_state_out_i is
+            --
+----        when "00000010" =>
+----            if tm1_FBERT_run_rdy_i = '1' then
+----                LED <= tm1_FBERT_BER_out_i(7 downto 0);
+----            end if;
+            --
+--        when "00000011" =>
+--            LED(0) <= tm0_FBERT_run_rdy_i;
+--            --LED(1) <= tm1_FBERT_run_rdy_i;
+--            --LED(2) <= gt0_txfsmresetdone_r2;
+--            --LED(3) <= gt1_txfsmresetdone_r2;
+--            LED(7 downto 1) <= (others=>'0');
+        --
+----        when "00000100" =>
+----            LED <= gt2_error_count_i;
+                        --
+----        when "00000101" =>
+----            LED <= gt3_error_count_i;
+            --
+--        when "00000110" =>
+--            case tm0_FBERT_state_out_i is
 --                when "000" =>
---                    LED <= "00000001";
+--                    LED <= "00000001";-- 
 --                when "001" =>
---                    LED <= "00000010";
+--                    LED <= "00000010";-- IDLE
 --                when "010" =>
---                    LED <= "00000100";
+--                    LED <= "00000100";-- SYNC_RX
 --                when "011" =>
---                    LED <= "00001000";
+--                    LED <= "00001000";-- RX_SYNCED
 --                when "100" =>
---                    LED <= "00010000";
+--                    LED <= "00010000";-- SYNC_BER_CALCULATOR
 --                when "101" =>
---                    LED <= "00100000";
+--                    LED <= "00100000";-- FBERT_RUN
 --                when "110" =>
---                    LED <= "01000000";
+--                    LED <= "01000000";-- FBERT_END
 --                when "111" =>
---                    LED <= "10000000";
+--                    LED <= "10000000";-- 
 --                when others =>
---                    LED <= "00000000";
+--                    LED <= "00000000";--
 --            end case;
-            
-        when "00001000" =>                        
-            LED(0) <= tm0_RXVALID_i;
-            LED(1) <= tm0_RXHEADER_i(0);
-            LED(2) <= tm0_RXHEADER_i(1);
-            LED(3) <= tm0_RXHEADERVALID_i;   
-            LED(4) <= tm0_RXGEARBOXSLIP_i; 
-            LED(7 downto 5) <= (others=>'0');
-                             
---        when "00001001" =>                        
---            LED(0) <= tm1_RXVALID_i;
---            LED(1) <= tm1_RXHEADER_i(0);
---            LED(2) <= tm1_RXHEADER_i(1);
---            LED(3) <= tm1_RXHEADERVALID_i;   
---            LED(4) <= tm1_RXGEARBOXSLIP_i; 
+            --
+----        when "00000111" =>
+        --
+----            case tm1_FBERT_state_out_i is
+----                when "000" =>
+----                    LED <= "00000001";
+----                when "001" =>
+----                    LED <= "00000010";
+----                when "010" =>
+----                    LED <= "00000100";
+----                when "011" =>
+----                    LED <= "00001000";
+----                when "100" =>
+----                    LED <= "00010000";
+----                when "101" =>
+----                    LED <= "00100000";
+----                when "110" =>
+----                    LED <= "01000000";
+----                when "111" =>
+----                    LED <= "10000000";
+----                when others =>
+----                    LED <= "00000000";
+----            end case;
+            --
+--        when "00001000" =>                        
+--            LED(0) <= tm0_RXVALID_i;
+--            LED(1) <= tm0_RXHEADER_i(0);
+--            LED(2) <= tm0_RXHEADER_i(1);
+--            LED(3) <= tm0_RXHEADERVALID_i;   
+--            LED(4) <= tm0_RXGEARBOXSLIP_i; 
 --            LED(7 downto 5) <= (others=>'0');
+                             --
+----        when "00001001" =>                        
+----            LED(0) <= tm1_RXVALID_i;
+----            LED(1) <= tm1_RXHEADER_i(0);
+----            LED(2) <= tm1_RXHEADER_i(1);
+----            LED(3) <= tm1_RXHEADERVALID_i;   
+----            LED(4) <= tm1_RXGEARBOXSLIP_i; 
+----            LED(7 downto 5) <= (others=>'0');
+--
+--        when "00001011" =>    
+--            LED <= tm0_RX_REF_CNT_i;               
+        --
+----        when "00001010" =>    
+----            LED <= tm1_RX_REF_CNT_i; 
+                           --
+--        when others =>
+--    end case;
+----    end if;
+    --
+--end process;
 
-        when "00001011" =>    
-            LED <= tm0_RX_REF_CNT_i;               
-        
---        when "00001010" =>    
---            LED <= tm1_RX_REF_CNT_i; 
-                           
-        when others =>
-    end case;
---    end if;
-    
-end process;
 
-
-
+-- Regulate the fan because it makes so much noise.
 FAN_PWM_Process:
 process(drpclk_in_i)
 variable counter : natural := 0;
@@ -2456,22 +2840,22 @@ begin
     end if;
 end process;  
 
-drpclk_in_i_process_0:
-process(drpclk_in_i)
-variable counter : natural := 0;
-variable drp_counter : natural := 0;
-begin
-
-    if rising_edge(drpclk_in_i) then
-    
-        if drp_counter = (200000000/2 - 1) then
-            drp_counter := 0;
-            drp_clk_toggler <= not drp_clk_toggler;
-        else
-            drp_counter := drp_counter + 1;
-        end if;        
-    end if;
-end process;    
+--drpclk_in_i_process_0:
+--process(drpclk_in_i)
+--variable counter : natural := 0;
+--variable drp_counter : natural := 0;
+--begin
+--
+    --if rising_edge(drpclk_in_i) then
+--    
+        --if drp_counter = (200000000/2 - 1) then
+            --drp_counter := 0;
+            --drp_clk_toggler <= not drp_clk_toggler;
+        --else
+            --drp_counter := drp_counter + 1;
+        --end if;        
+    --end if;
+--end process;    
     
     
     
@@ -2776,8 +3160,8 @@ port map
     ------------------- Receive Ports - Digital Monitor Ports ------------------
     gt2_dmonitorout_out             =>      gt2_dmonitorout_i,
     ------------------ Receive Ports - FPGA RX interface Ports -----------------
-gt2_rxdata_out                  =>      gt2_rxdata_i,
-    --gt2_rxdata_out                  =>      tm2_RXDATA_i,
+--gt2_rxdata_out                  =>      gt2_rxdata_i,
+    gt2_rxdata_out                  =>      tm2_RXDATA_i,
     ------------------- Receive Ports - Pattern Checker Ports ------------------
     gt2_rxprbserr_out               =>      gt2_rxprbserr_i,
     gt2_rxprbssel_in                =>      gt2_rxprbssel_i,
@@ -2797,12 +3181,12 @@ gt2_rxdata_out                  =>      gt2_rxdata_i,
     --------------- Receive Ports - RX Fabric Output Control Ports -------------
     gt2_rxoutclkfabric_out          =>      gt2_rxoutclkfabric_i,
     ---------------------- Receive Ports - RX Gearbox Ports --------------------
-gt2_rxdatavalid_out             =>      gt2_rxdatavalid_i,
-    --gt2_rxdatavalid_out             =>      tm2_RXVALID_i,
-gt2_rxheader_out                =>      gt2_rxheader_i,
-    --gt2_rxheader_out                =>      tm2_RXHEADER_i,
-gt2_rxheadervalid_out           =>      gt2_rxheadervalid_i,
-    --gt2_rxheadervalid_out           =>      tm2_RXHEADERVALID_i,
+--gt2_rxdatavalid_out             =>      gt2_rxdatavalid_i,
+    gt2_rxdatavalid_out             =>      tm2_RXVALID_i,
+--gt2_rxheader_out                =>      gt2_rxheader_i,
+    gt2_rxheader_out                =>      tm2_RXHEADER_i,
+--gt2_rxheadervalid_out           =>      gt2_rxheadervalid_i,
+    gt2_rxheadervalid_out           =>      tm2_RXHEADERVALID_i,
     --------------------- Receive Ports - RX Gearbox Ports  --------------------
     gt2_rxgearboxslip_in            =>      gt2_rxgearboxslip_i,
     ------------- Receive Ports - RX Initialization and Reset Ports ------------
@@ -2824,8 +3208,8 @@ gt2_rxheadervalid_out           =>      gt2_rxheadervalid_i,
     gt2_gttxreset_in                =>      tied_to_ground_i,
     gt2_txuserrdy_in                =>      tied_to_ground_i,
     -------------- Transmit Ports - 64b66b and 64b67b Gearbox Ports ------------
-gt2_txheader_in                 =>      gt2_txheader_r,
-    --gt2_txheader_in                 =>      tm2_TXHEADER_i,
+--gt2_txheader_in                 =>      gt2_txheader_r,
+    gt2_txheader_in                 =>      tm2_TXHEADER_i,
     ------------------ Transmit Ports - Pattern Generator Ports ----------------
     gt2_txprbsforceerr_in           =>      gt2_txprbsforceerr_i,
     ---------------------- Transmit Ports - TX Buffer Ports --------------------
@@ -2835,8 +3219,8 @@ gt2_txheader_in                 =>      gt2_txheader_r,
     gt2_txinhibit_in                =>      gt2_txinhibit_i,
     gt2_txmaincursor_in             =>      "0111000",
     ------------------ Transmit Ports - TX Data Path interface -----------------
-gt2_txdata_in                   =>      gt2_scrambled_data_i,
-    --gt2_txdata_in                   =>      tm2_TXDATA_i,
+--gt2_txdata_in                   =>      gt2_scrambled_data_i,
+    gt2_txdata_in                   =>      tm2_TXDATA_i,
     ---------------- Transmit Ports - TX Driver and OOB signaling --------------
     gt2_gthtxn_out                  =>      TXN_OUT(2),
     gt2_gthtxp_out                  =>      TXP_OUT(2),
@@ -2844,8 +3228,8 @@ gt2_txdata_in                   =>      gt2_scrambled_data_i,
     gt2_txoutclkfabric_out          =>      gt2_txoutclkfabric_i,
     gt2_txoutclkpcs_out             =>      gt2_txoutclkpcs_i,
     --------------------- Transmit Ports - TX Gearbox Ports --------------------
-gt2_txsequence_in               =>      gt2_txsequence_i,
-    --gt2_txsequence_in               =>      tm2_TXSEQ_i,
+--gt2_txsequence_in               =>      gt2_txsequence_i,
+    gt2_txsequence_in               =>      tm2_TXSEQ_i,
     ------------- Transmit Ports - TX Initialization and Reset Ports -----------
     gt2_txpcsreset_in               =>      tied_to_ground_i,
     gt2_txresetdone_out             =>      gt2_txresetdone_i,
@@ -2882,8 +3266,8 @@ gt2_txsequence_in               =>      gt2_txsequence_i,
     ------------------- Receive Ports - Digital Monitor Ports ------------------
     gt3_dmonitorout_out             =>      gt3_dmonitorout_i,
     ------------------ Receive Ports - FPGA RX interface Ports -----------------
-gt3_rxdata_out                  =>      gt3_rxdata_i,
-    --gt3_rxdata_out                  =>      tm3_RXDATA_i,
+--gt3_rxdata_out                  =>      gt3_rxdata_i,
+    gt3_rxdata_out                  =>      tm3_RXDATA_i,
     ------------------- Receive Ports - Pattern Checker Ports ------------------
     gt3_rxprbserr_out               =>      gt3_rxprbserr_i,
     gt3_rxprbssel_in                =>      gt3_rxprbssel_i,
@@ -2903,12 +3287,12 @@ gt3_rxdata_out                  =>      gt3_rxdata_i,
     --------------- Receive Ports - RX Fabric Output Control Ports -------------
     gt3_rxoutclkfabric_out          =>      gt3_rxoutclkfabric_i,
     ---------------------- Receive Ports - RX Gearbox Ports --------------------
-gt3_rxdatavalid_out             =>      gt3_rxdatavalid_i,
-    --gt3_rxdatavalid_out             =>      tm3_RXVALID_i,
-gt3_rxheader_out                =>      gt3_rxheader_i,
-    --gt3_rxheader_out                =>      tm3_RXHEADER_i,
-gt3_rxheadervalid_out           =>      gt3_rxheadervalid_i,
-    --gt3_rxheadervalid_out           =>      tm3_RXHEADERVALID_i,
+--gt3_rxdatavalid_out             =>      gt3_rxdatavalid_i,
+    gt3_rxdatavalid_out             =>      tm3_RXVALID_i,
+--gt3_rxheader_out                =>      gt3_rxheader_i,
+    gt3_rxheader_out                =>      tm3_RXHEADER_i,
+--gt3_rxheadervalid_out           =>      gt3_rxheadervalid_i,
+    gt3_rxheadervalid_out           =>      tm3_RXHEADERVALID_i,
     --------------------- Receive Ports - RX Gearbox Ports  --------------------
     gt3_rxgearboxslip_in            =>      gt3_rxgearboxslip_i,
     ------------- Receive Ports - RX Initialization and Reset Ports ------------
@@ -2930,8 +3314,8 @@ gt3_rxheadervalid_out           =>      gt3_rxheadervalid_i,
     gt3_gttxreset_in                =>      tied_to_ground_i,
     gt3_txuserrdy_in                =>      tied_to_ground_i,
     -------------- Transmit Ports - 64b66b and 64b67b Gearbox Ports ------------
-gt3_txheader_in                 =>      gt3_txheader_r,
-    --gt3_txheader_in                 =>      tm3_TXHEADER_i,
+--gt3_txheader_in                 =>      gt3_txheader_r,
+    gt3_txheader_in                 =>      tm3_TXHEADER_i,
     ------------------ Transmit Ports - Pattern Generator Ports ----------------
     gt3_txprbsforceerr_in           =>      gt3_txprbsforceerr_i,
     ---------------------- Transmit Ports - TX Buffer Ports --------------------
@@ -2941,8 +3325,8 @@ gt3_txheader_in                 =>      gt3_txheader_r,
     gt3_txinhibit_in                =>      gt3_txinhibit_i,
     gt3_txmaincursor_in             =>      "0111000",
     ------------------ Transmit Ports - TX Data Path interface -----------------
-gt3_txdata_in                   =>      gt3_scrambled_data_i,
-    --gt3_txdata_in                   =>      tm3_TXDATA_i,
+--gt3_txdata_in                   =>      gt3_scrambled_data_i,
+    gt3_txdata_in                   =>      tm3_TXDATA_i,
     ---------------- Transmit Ports - TX Driver and OOB signaling --------------
     gt3_gthtxn_out                  =>      TXN_OUT(3),
     gt3_gthtxp_out                  =>      TXP_OUT(3),
@@ -2950,8 +3334,8 @@ gt3_txdata_in                   =>      gt3_scrambled_data_i,
     gt3_txoutclkfabric_out          =>      gt3_txoutclkfabric_i,
     gt3_txoutclkpcs_out             =>      gt3_txoutclkpcs_i,
     --------------------- Transmit Ports - TX Gearbox Ports --------------------
-gt3_txsequence_in               =>      gt3_txsequence_i,
-    --gt3_txsequence_in               =>      tm3_TXSEQ_i,
+--gt3_txsequence_in               =>      gt3_txsequence_i,
+    gt3_txsequence_in               =>      tm3_TXSEQ_i,
     ------------- Transmit Ports - TX Initialization and Reset Ports -----------
     gt3_txpcsreset_in               =>      tied_to_ground_i,
     gt3_txresetdone_out             =>      gt3_txresetdone_i,
@@ -3144,41 +3528,41 @@ end process;
 --    SYSTEM_RESET                    =>      gt1_tx_system_reset_c
 --);
 
-gt2_frame_gen : gtwizard_0_GT_FRAME_GEN
-generic map
-(
-    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM
-)
-port map
-(
-    -- User Interface
-    TX_DATA_OUT(15 downto 0)        =>      gt2_txdata_float16_i,
-    TX_DATA_OUT(79 downto 16)       =>      gt2_txdata_i,
-    TXCTRL_OUT(7 downto 1)          =>      gt2_txctrl_float_i,
-    TXCTRL_OUT(0)                   =>      gt2_txctrl_i,
-    TXDATAVALID_IN                  =>      gt2_txdatavalid_i,
-    -- System Interface
-    USER_CLK                        =>      gt2_txusrclk2_i,
-    SYSTEM_RESET                    =>      gt2_tx_system_reset_c
-);
-
-gt3_frame_gen : gtwizard_0_GT_FRAME_GEN
-generic map
-(
-    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM
-)
-port map
-(
-    -- User Interface
-    TX_DATA_OUT(15 downto 0)        =>      gt3_txdata_float16_i,
-    TX_DATA_OUT(79 downto 16)       =>      gt3_txdata_i,
-    TXCTRL_OUT(7 downto 1)          =>      gt3_txctrl_float_i,
-    TXCTRL_OUT(0)                   =>      gt3_txctrl_i,
-    TXDATAVALID_IN                  =>      gt3_txdatavalid_i,
-    -- System Interface
-    USER_CLK                        =>      gt3_txusrclk2_i,
-    SYSTEM_RESET                    =>      gt3_tx_system_reset_c
-);
+--gt2_frame_gen : gtwizard_0_GT_FRAME_GEN
+--generic map
+--(
+--    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM
+--)
+--port map
+--(
+--    -- User Interface
+--    TX_DATA_OUT(15 downto 0)        =>      gt2_txdata_float16_i,
+--    TX_DATA_OUT(79 downto 16)       =>      gt2_txdata_i,
+--    TXCTRL_OUT(7 downto 1)          =>      gt2_txctrl_float_i,
+--    TXCTRL_OUT(0)                   =>      gt2_txctrl_i,
+--    TXDATAVALID_IN                  =>      gt2_txdatavalid_i,
+--    -- System Interface
+--    USER_CLK                        =>      gt2_txusrclk2_i,
+--    SYSTEM_RESET                    =>      gt2_tx_system_reset_c
+--);
+--
+--gt3_frame_gen : gtwizard_0_GT_FRAME_GEN
+--generic map
+--(
+--    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM
+--)
+--port map
+--(
+--    -- User Interface
+--    TX_DATA_OUT(15 downto 0)        =>      gt3_txdata_float16_i,
+--    TX_DATA_OUT(79 downto 16)       =>      gt3_txdata_i,
+--    TXCTRL_OUT(7 downto 1)          =>      gt3_txctrl_float_i,
+--    TXCTRL_OUT(0)                   =>      gt3_txctrl_i,
+--    TXDATAVALID_IN                  =>      gt3_txdatavalid_i,
+--    -- System Interface
+--    USER_CLK                        =>      gt3_txusrclk2_i,
+--    SYSTEM_RESET                    =>      gt3_tx_system_reset_c
+--);
 
 
 
@@ -3260,27 +3644,27 @@ gt2_frame_check_reset_i                      <= reset_on_data_error_i when (EXAM
     -- Else, the data checking is triggered by the "master" lane
 gt2_inc_in_i                                 <= gt0_inc_out_i when  (EXAMPLE_CONFIG_INDEPENDENT_LANES=0) else '0';
 
-gt2_frame_check : gtwizard_0_GT_FRAME_CHECK
-generic map
-(
-    RX_DATA_WIDTH                   =>      64,
-    RXCTRL_WIDTH                    =>      2,
-    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM,
-    START_OF_PACKET_CHAR            =>      x"00000000000000fb"
-)
-port map
-(
-    -- GT Interface
-    RX_DATA_IN                      =>      gt2_unscrambled_data_i,
-    RXENMCOMMADET_OUT               =>      open,
-    RXENPCOMMADET_OUT               =>      open,
-    RXDATAVALID_IN                  =>      gt2_rxdatavalid_i,
-    -- System Interface
-    USER_CLK                        =>      gt2_rxusrclk2_i,
-    SYSTEM_RESET                    =>      gt2_rx_system_reset_c,
-    ERROR_COUNT_OUT                 =>      gt2_error_count_i,
-    TRACK_DATA_OUT                  =>      gt2_track_data_i
-);
+--gt2_frame_check : gtwizard_0_GT_FRAME_CHECK
+--generic map
+--(
+--    RX_DATA_WIDTH                   =>      64,
+--    RXCTRL_WIDTH                    =>      2,
+--    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM,
+--    START_OF_PACKET_CHAR            =>      x"00000000000000fb"
+--)
+--port map
+--(
+--    -- GT Interface
+--    RX_DATA_IN                      =>      gt2_unscrambled_data_i,
+--    RXENMCOMMADET_OUT               =>      open,
+--    RXENPCOMMADET_OUT               =>      open,
+--    RXDATAVALID_IN                  =>      gt2_rxdatavalid_i,
+--    -- System Interface
+--    USER_CLK                        =>      gt2_rxusrclk2_i,
+--    SYSTEM_RESET                    =>      gt2_rx_system_reset_c,
+--    ERROR_COUNT_OUT                 =>      gt2_error_count_i,
+--    TRACK_DATA_OUT                  =>      gt2_track_data_i
+--);
 
 gt3_frame_check_reset_i                      <= reset_on_data_error_i when (EXAMPLE_CONFIG_INDEPENDENT_LANES=0) else gt3_matchn_i;
 
@@ -3289,27 +3673,27 @@ gt3_frame_check_reset_i                      <= reset_on_data_error_i when (EXAM
     -- Else, the data checking is triggered by the "master" lane
 gt3_inc_in_i                                 <= gt0_inc_out_i when  (EXAMPLE_CONFIG_INDEPENDENT_LANES=0) else '0';
 
-gt3_frame_check : gtwizard_0_GT_FRAME_CHECK
-generic map
-(
-    RX_DATA_WIDTH                   =>      64,
-    RXCTRL_WIDTH                    =>      2,
-    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM,
-    START_OF_PACKET_CHAR            =>      x"00000000000000fb"
-)
-port map
-(
-    -- GT Interface
-    RX_DATA_IN                      =>      gt3_unscrambled_data_i,
-    RXENMCOMMADET_OUT               =>      open,
-    RXENPCOMMADET_OUT               =>      open,
-    RXDATAVALID_IN                  =>      gt3_rxdatavalid_i,
-    -- System Interface
-    USER_CLK                        =>      gt3_rxusrclk2_i,
-    SYSTEM_RESET                    =>      gt3_rx_system_reset_c,
-    ERROR_COUNT_OUT                 =>      gt3_error_count_i,
-    TRACK_DATA_OUT                  =>      gt3_track_data_i
-);
+--gt3_frame_check : gtwizard_0_GT_FRAME_CHECK
+--generic map
+--(
+--    RX_DATA_WIDTH                   =>      64,
+--    RXCTRL_WIDTH                    =>      2,
+--    WORDS_IN_BRAM                   =>      EXAMPLE_WORDS_IN_BRAM,
+--    START_OF_PACKET_CHAR            =>      x"00000000000000fb"
+--)
+--port map
+--(
+--    -- GT Interface
+--    RX_DATA_IN                      =>      gt3_unscrambled_data_i,
+--    RXENMCOMMADET_OUT               =>      open,
+--    RXENPCOMMADET_OUT               =>      open,
+--    RXDATAVALID_IN                  =>      gt3_rxdatavalid_i,
+--    -- System Interface
+--    USER_CLK                        =>      gt3_rxusrclk2_i,
+--    SYSTEM_RESET                    =>      gt3_rx_system_reset_c,
+--    ERROR_COUNT_OUT                 =>      gt3_error_count_i,
+--    TRACK_DATA_OUT                  =>      gt3_track_data_i
+--);
 
 
 
@@ -3761,115 +4145,115 @@ if( gt3_txusrclk2_i'event and gt3_txusrclk2_i = '1') then
 --        SYSTEM_RESET        =>     gt1_reset_r
 --    );
     --________________________ Block Sync State Machine _______________________
-    block_sync_sm_2_i  :  gtwizard_0_BLOCK_SYNC_SM 
-    generic map
-    (
-        SH_CNT_MAX          => 64,    
-        SH_INVALID_CNT_MAX  => 16    
-    )
-    port map
-    (
-        -- User Interface
-        BLOCKSYNC_OUT             =>    gt2_block_lock_i,
-        RXGEARBOXSLIP_OUT         =>    gt2_rxgearboxslip_i,
-        RXHEADER_IN(2)            =>    tied_to_ground_i,
-        RXHEADER_IN(1 downto 0)   =>    gt2_rxheader_i,
-        RXHEADERVALID_IN          =>    gt2_rxheadervalid_i,
-
-        -- System Interface
-        USER_CLK                  =>    gt2_rxusrclk2_i,
-        SYSTEM_RESET              =>    gt2_rx_reset_i2
-    );
+--    block_sync_sm_2_i  :  gtwizard_0_BLOCK_SYNC_SM 
+--    generic map
+--    (
+--        SH_CNT_MAX          => 64,    
+--        SH_INVALID_CNT_MAX  => 16    
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        BLOCKSYNC_OUT             =>    gt2_block_lock_i,
+--        RXGEARBOXSLIP_OUT         =>    gt2_rxgearboxslip_i,
+--        RXHEADER_IN(2)            =>    tied_to_ground_i,
+--        RXHEADER_IN(1 downto 0)   =>    gt2_rxheader_i,
+--        RXHEADERVALID_IN          =>    gt2_rxheadervalid_i,
+--
+--        -- System Interface
+--        USER_CLK                  =>    gt2_rxusrclk2_i,
+--        SYSTEM_RESET              =>    gt2_rx_reset_i2
+--    );
 
     --___________________ Descrambler for 64B66B/67B decoding _________________    
-    descrambler_2_i  :  gtwizard_0_DESCRAMBLER 
-    generic map
-    (
-    RX_DATA_WIDTH         =>     64
-    )
-    port map
-    (
-        -- User Interface
-        SCRAMBLED_DATA_IN     =>     gt2_rxdata_i,
-        UNSCRAMBLED_DATA_OUT  =>     gt2_unscrambled_data_i,
-        DATA_VALID_IN         =>     gt2_rxdatavalid_i,
+--    descrambler_2_i  :  gtwizard_0_DESCRAMBLER 
+--    generic map
+--    (
+--    RX_DATA_WIDTH         =>     64
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        SCRAMBLED_DATA_IN     =>     gt2_rxdata_i,
+--        UNSCRAMBLED_DATA_OUT  =>     gt2_unscrambled_data_i,
+--        DATA_VALID_IN         =>     gt2_rxdatavalid_i,
+--
+--        -- System Interface
+--        USER_CLK              =>     gt2_rxusrclk2_i,
+--        SYSTEM_RESET          =>     gt2_not_block_lock_i
+--    );
 
-        -- System Interface
-        USER_CLK              =>     gt2_rxusrclk2_i,
-        SYSTEM_RESET          =>     gt2_not_block_lock_i
-    );
-
-    scrambler_2_i  :  gtwizard_0_SCRAMBLER
-    generic map
-    (
-    TX_DATA_WIDTH       =>     64
-    )
-    port map
-    (
-        -- User Interface
-        UNSCRAMBLED_DATA_IN =>     gt2_txdata_i,
-        SCRAMBLED_DATA_OUT  =>     gt2_scrambled_data_i,
-        DATA_VALID_IN       =>     gt2_data_valid_i,
-
-        -- System Interface
-        USER_CLK            =>     gt2_txusrclk2_i,
-        SYSTEM_RESET        =>     gt2_reset_r
-    );
+--    scrambler_2_i  :  gtwizard_0_SCRAMBLER
+--    generic map
+--    (
+--    TX_DATA_WIDTH       =>     64
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        UNSCRAMBLED_DATA_IN =>     gt2_txdata_i,
+--        SCRAMBLED_DATA_OUT  =>     gt2_scrambled_data_i,
+--        DATA_VALID_IN       =>     gt2_data_valid_i,
+--
+--        -- System Interface
+--        USER_CLK            =>     gt2_txusrclk2_i,
+--        SYSTEM_RESET        =>     gt2_reset_r
+--    );
     --________________________ Block Sync State Machine _______________________
-    block_sync_sm_3_i  :  gtwizard_0_BLOCK_SYNC_SM 
-    generic map
-    (
-        SH_CNT_MAX          => 64,    
-        SH_INVALID_CNT_MAX  => 16    
-    )
-    port map
-    (
-        -- User Interface
-        BLOCKSYNC_OUT             =>    gt3_block_lock_i,
-        RXGEARBOXSLIP_OUT         =>    gt3_rxgearboxslip_i,
-        RXHEADER_IN(2)            =>    tied_to_ground_i,
-        RXHEADER_IN(1 downto 0)   =>    gt3_rxheader_i,
-        RXHEADERVALID_IN          =>    gt3_rxheadervalid_i,
-
-        -- System Interface
-        USER_CLK                  =>    gt3_rxusrclk2_i,
-        SYSTEM_RESET              =>    gt3_rx_reset_i2
-    );
+--    block_sync_sm_3_i  :  gtwizard_0_BLOCK_SYNC_SM 
+--    generic map
+--    (
+--        SH_CNT_MAX          => 64,    
+--        SH_INVALID_CNT_MAX  => 16    
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        BLOCKSYNC_OUT             =>    gt3_block_lock_i,
+--        RXGEARBOXSLIP_OUT         =>    gt3_rxgearboxslip_i,
+--        RXHEADER_IN(2)            =>    tied_to_ground_i,
+--        RXHEADER_IN(1 downto 0)   =>    gt3_rxheader_i,
+--        RXHEADERVALID_IN          =>    gt3_rxheadervalid_i,
+--
+--        -- System Interface
+--        USER_CLK                  =>    gt3_rxusrclk2_i,
+--        SYSTEM_RESET              =>    gt3_rx_reset_i2
+--    );
 
     --___________________ Descrambler for 64B66B/67B decoding _________________    
-    descrambler_3_i  :  gtwizard_0_DESCRAMBLER 
-    generic map
-    (
-    RX_DATA_WIDTH         =>     64
-    )
-    port map
-    (
-        -- User Interface
-        SCRAMBLED_DATA_IN     =>     gt3_rxdata_i,
-        UNSCRAMBLED_DATA_OUT  =>     gt3_unscrambled_data_i,
-        DATA_VALID_IN         =>     gt3_rxdatavalid_i,
-
-        -- System Interface
-        USER_CLK              =>     gt3_rxusrclk2_i,
-        SYSTEM_RESET          =>     gt3_not_block_lock_i
-    );
-
-    scrambler_3_i  :  gtwizard_0_SCRAMBLER
-    generic map
-    (
-    TX_DATA_WIDTH       =>     64
-    )
-    port map
-    (
-        -- User Interface
-        UNSCRAMBLED_DATA_IN =>     gt3_txdata_i,
-        SCRAMBLED_DATA_OUT  =>     gt3_scrambled_data_i,
-        DATA_VALID_IN       =>     gt3_data_valid_i,
-
-        -- System Interface
-        USER_CLK            =>     gt3_txusrclk2_i,
-        SYSTEM_RESET        =>     gt3_reset_r
-    );
+--    descrambler_3_i  :  gtwizard_0_DESCRAMBLER 
+--    generic map
+--    (
+--    RX_DATA_WIDTH         =>     64
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        SCRAMBLED_DATA_IN     =>     gt3_rxdata_i,
+--        UNSCRAMBLED_DATA_OUT  =>     gt3_unscrambled_data_i,
+--        DATA_VALID_IN         =>     gt3_rxdatavalid_i,
+--
+--        -- System Interface
+--        USER_CLK              =>     gt3_rxusrclk2_i,
+--        SYSTEM_RESET          =>     gt3_not_block_lock_i
+--    );
+--
+--    scrambler_3_i  :  gtwizard_0_SCRAMBLER
+--    generic map
+--    (
+--    TX_DATA_WIDTH       =>     64
+--    )
+--    port map
+--    (
+--        -- User Interface
+--        UNSCRAMBLED_DATA_IN =>     gt3_txdata_i,
+--        SCRAMBLED_DATA_OUT  =>     gt3_scrambled_data_i,
+--        DATA_VALID_IN       =>     gt3_data_valid_i,
+--
+--        -- System Interface
+--        USER_CLK            =>     gt3_txusrclk2_i,
+--        SYSTEM_RESET        =>     gt3_reset_r
+--    );
 
 -------------------------------------------------------------------------------
 ----------------------------- Debug Signals assignment -----------------------

@@ -1,6 +1,8 @@
+"""	Generates the synchronization data for the system.
+"""
 import random
 
-print(random.randint(1024,2**64))
+print(random.randint(1024,2**63))
 
 start = """
 	type sync_vector_type i array 0 to 127 of std_logic_vector(63 downto 0)

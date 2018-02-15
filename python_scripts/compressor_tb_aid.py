@@ -1,5 +1,8 @@
-# Just to generate some strings for the testbench.
-
+""" Just to generate some strings for the testbench. I was testing
+	all of these in the same test bench and so I made this to
+	print out all declarations and then I just copied and pasted them
+	into that file.
+"""
 INPUT_WIDTH  = 64
 OUTPUT_WIDTHS = [127,255,511,120,247,502,113,239,493,106,231,484,99,223,475]
 

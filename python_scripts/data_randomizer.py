@@ -1,3 +1,5 @@
+"""	Generates some random data, can be used, e.g., for synchronization.
+"""
 import random
 
 start = """
@@ -12,7 +14,7 @@ if HEX:
 	print(start)
 
 	for i in range(31):
-		cool_number = random.randint(0,2**64-1)
+		cool_number = random.randint(0,2**63-1)
 		start += "            x\"" + hex(cool_number)[2:].zfill(16) + "\",\n"
 
 	start = start[0:-2] + ");\n"

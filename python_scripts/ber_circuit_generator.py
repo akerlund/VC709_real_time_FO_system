@@ -1,10 +1,17 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+""" This script generates .vhd circuits which compares two vectors
+    and outputs the number of bits which differ from eachother at
+    their respective positions. Assuming 2^n sized vectors.
+"""
+
 import sys, math, time
 
 localtime = time.asctime( time.localtime(time.time()) )
 
-IN_WIDTH = int(512)
+IN_WIDTH = int(64)
 
-STAGES = int(math.log2(IN_WIDTH))
+STAGES = int(math.log(IN_WIDTH,2))
 FILENAME = "BER_circuit_" + str(IN_WIDTH) + "_bit_input.vhd"
 ENTITYNAME = "BER_circuit_" + str(IN_WIDTH) + "_bit_input"
 
@@ -90,11 +97,11 @@ out_file += """
 
 
 # Calculating the width of every stage's vector.
-block_divider = 2
-stage = 1
-bits_in_block = 3
-bits_in_stage = 0
-width_of_stages = []
+block_divider = 2 # Divides the IN_WIDTH, used in the below loop's condition.
+stage = 1         # I.e., pipeline stage.
+bits_in_block = 3 # First stage use 2-bit addition, resulting in 3-bit vector.
+bits_in_stage = 0 # Dynbamically calculated.
+width_of_stages = [] # Saves all.
 width_of_stages.append(IN_WIDTH-1)
 while not int(IN_WIDTH/block_divider) == 1:
 
